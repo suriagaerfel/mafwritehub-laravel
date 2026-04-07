@@ -1,0 +1,19 @@
+/*Mobile version*/
+@media only screen and (max-width: 767px) {
+}
+
+/*On tablet, hide header navigation buttons and show the navigation container.*/
+@media only screen and (768px <= width) {
+}
+
+/*While not yet on the desktop mode, the search input is hidden to gice space to the navigation container.*/
+@media only screen and (width <=1023px) {
+}
+
+/*Between tablet and desktop modes...*/
+@media only screen and (768px <= width <=1023px) {
+}
+
+/*On desktop mode...*/
+@media only screen and (1024 <= width) {
+}

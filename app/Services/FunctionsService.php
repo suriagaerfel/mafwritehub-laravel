@@ -8,79 +8,13 @@ use PHPMailer\PHPMailer\Exception;
 class FunctionsService
 {
    
-    public function dcomplete_format($string="") {
-        if ($string){
-        return date("M j, Y g:i a",strtotime($string));
-        }
-    }
-
-
-
-
-public function dMDY_format($string="") {
-   if ($string){
-      return date("M j, Y",strtotime($string));
-    }
-  
+   function dcomplete_format($string="") {
+  return date("M j, Y g:i a",strtotime($string));
 }
 
-
-
-function image_crop ($file,$maxResolution) {
-  if (file_exists($file)) {
-
-    $imageFileNameActualExt="";
-
-    if ($imageFileNameActualExt=='jpeg') {
-    $originalImage = imagecreatefromjpeg($file);
-    }
-
-    if ($imageFileNameActualExt=='png') {
-    $originalImage = imagecreatefrompng($file);
-    }
-    
-    $originalWidth = imagesx($originalImage);
-    $originalHeight = imagesy($originalImage);
-
-    if ($originalHeight > $originalWidth) {
-    $ratio = $maxResolution / $originalWidth;
-    $newWidth = $maxResolution;
-    $newHeight = $originalHeight * $ratio;
-
-    $difference= $newHeight - $newWidth;
-
-    $x=0;
-    $y = round($difference/2);
-
-    } else {
-
-      $ratio = $maxResolution / $originalHeight;
-      $newHeight = $maxResolution;
-      $newWidth = $originalWidth * $ratio;
-
-      $difference= $newWidth - $newHeight;
-
-      $x = round($difference/2);
-      $y=0;
-    }   
-
-   
-    
-
-    if ($originalImage) {
-      $newImage = imagecreatetruecolor($newWidth,$newHeight);
-    imagecopyresampled($newImage,$originalImage,0,0,0,0,$newWidth,$newHeight,$originalWidth,$originalHeight); 
-
-    $newCropImage = imagecreatetruecolor($maxResolution,$maxResolution);
-    imagecopyresampled($newCropImage,$newImage,0,0,$x,$y,$maxResolution,$maxResolution,$maxResolution,$maxResolution); 
-
-    imagejpeg($newCropImage,$file,90);
-    }
-
-
-  }
+function dmdy_format($string="") {
+  return date("M j, Y",strtotime($string));
 }
-
 
 
 
@@ -108,11 +42,7 @@ function generateSlug($string) {
 
 
 
-
-
-
-
-function limit_words($string, int $word_limit) {
+function limit_words_description ($string, $word_limit=50) {
     // Split the string into an array of words using a space delimiter
     $words = explode(' ', $string);
     
@@ -138,9 +68,7 @@ function limit_words($string, int $word_limit) {
 
 
 
-
-
-function limit_words_title ($string, int $word_limit_title) {
+function limit_words_title ($string, $word_limit_title=15) {
     // Split the string into an array of words using a space delimiter
     $words = explode(' ', $string);
     
@@ -160,6 +88,31 @@ function limit_words_title ($string, int $word_limit_title) {
     }
 
     return $limited_string;
+}
+
+
+
+
+
+
+
+
+function get_first_n_words($string, $n = 90) {
+    // Split the string into an array of words using space as a delimiter
+    $words = explode(' ', $string);
+    
+    // If the total number of words is less than or equal to $n, return the original string
+    if (count($words) <= $n) {
+        return $string;
+    }
+    
+    // Extract the first $n words
+    $first_n_words = array_slice($words, 0, $n);
+    
+    // Join the words back into a string, adding an ellipsis if desired
+    $result = implode(' ', $first_n_words) . '...';
+    
+    return $result;
 }
 }
 
