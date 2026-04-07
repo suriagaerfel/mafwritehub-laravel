@@ -1,0 +1,49 @@
+{
+    "version": 2,
+    "framework": null,
+    "functions": {
+        "api/**/*.php": {
+            "runtime": "vercel-php@0.8.0"
+        }
+    },
+    "outputDirectory": "public",
+
+    "routes": [
+        {
+            "src": "/build/assets/(.*)",
+            "dest": "/public/build/assets/$1"
+        },
+        {
+            "src": "/favicon.ico",
+            "headers": {
+                "Content-Type": "image/x-icon"
+            },
+            "dest": "/public/favicon.ico"
+        },
+
+        {
+            "src": "/articles",
+            "dest": "/api/articles.php"
+        },
+
+        {
+            "src": "/teacher-files",
+            "dest": "/api/teacher-files.php"
+        },
+
+        {
+            "src": "/tools",
+            "dest": "/api/tools.php"
+        },
+
+        {
+            "src": "/researches",
+            "dest": "/api/researches.php"
+        },
+
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.php"
+        }
+    ]
+}

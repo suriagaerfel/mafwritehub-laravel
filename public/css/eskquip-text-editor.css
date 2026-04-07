@@ -1,0 +1,50 @@
+:root {
+  /* Font Size */
+  --text-sm: 1.2rem;
+  --text-base: 1.6rem;
+  --text-paragraph: 2rem;
+  --text-h5: 2rem; /*2.4rem;*/
+  --text-h4: 2.5rem;
+  --text-h3: 3rem;
+  --text-h2: 3.5rem; /*4.8rem;*/
+  --text-h1: 4rem; /*6.2rem;
+
+  /* Font Weight */
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -2px;
+
+  /* Font Family */
+  --font-family: "Arial", sans-serif;
+}
+
+#eskquip-editor {
+  width: 100%;
+  height: fit-content;
+  min-height: 250px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  outline: none;
+  padding: 20px;
+  font-family: var(--font-family) !important;
+  font-size: 20pt !important;
+}
+
+#eskquip-editor p,
+#eskquip-editor span,
+#eskquip-editor a {
+  font-size: 12pt !important;
+}
+
+#eskquip-editor,
+#eskquip-editor div,
+#eskquip-editor p {
+  white-space: wrap; /* prevents text from wrapping to a new line */
+  overflow: hidden; /* hides the overflowing content */
+  overflow-wrap: break-all;
+}
