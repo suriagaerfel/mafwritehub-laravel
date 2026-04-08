@@ -244,9 +244,9 @@ public function get_article_categories (Request $request){
 
         if ($selectedCategory) {
                    
-                    $stmt= $conn->prepare("SELECT * FROM article_categories WHERE name=?");
-                    $stmt->execute([$selectedCategory]);
-                    $checkedCategory = $stmt->fetch();
+                $stmt= $conn->prepare("SELECT * FROM article_categories WHERE name=?");
+                $stmt->execute([$selectedCategory]);
+                $checkedCategory = $stmt->fetch();
 
 
             
@@ -415,6 +415,319 @@ public function get_article_topics (Request $request){
         }
 }
 
+
+public function add_category (Request $request){
+    if ($request->input('add_category_submit')) {
+        $conn= config('app.conn');
+
+        $newCategory = htmlspecialchars($_POST['new_category']);
+
+        $stmt= $conn->prepare("INSERT INTO article_categories (name) VALUES (?)");
+        $stmt->execute([$newCategory]);
+
+            echo 'Category added';
+        }
+}
+
+
+public function add_topic (){
+    if (isset($_POST['add_topic_submit'])) {
+        $conn= config('app.conn');
+        $newTopic = htmlspecialchars($_POST['new_topic']);
+
+        $stmt= $conn->prepare("INSERT INTO article_topics(name) VALUES (?)");
+        $stmt->execute([$newTopic]);
+
+        echo 'Topic added';
+    }
+}
+
+public function delete_category (Request $request){
+        if ($request->input('delete_category_submit')) {
+            $conn= config('app.conn');
+
+            $deleteCategory = htmlspecialchars($_POST['delete_category']);
+            $stmt = $conn->prepare("delete from article_categories where name=?");
+            $stmt->execute([$deleteCategory]);
+      
+    }
+
+}
+
+
+public function delete_topic (Request $request){
+    if ($request->input('delete_topic_submit')) {
+    $conn= config('app.conn');
+    $deleteTopic = htmlspecialchars($_POST['delete_topic']);
+    $stmt= $conn->prepare("delete from article_topics where name=?");
+    $stmt->execute([$deleteTopic]);
+      
+    }
+}
+
+
+public function get_article_content_versions (Request $request){
+    if ($request->input('get_article_content_versions_submit')) {
+        $conn=  config('app.conn');
+
+        $articleId = htmlspecialchars($_POST['article_id']);
+
+   if ($articleId) {
+   
+      $stmt= $conn->prepare("SELECT * FROM article_content_versions WHERE article_id = ? ORDER BY id DESC");
+      $stmt->execute([$articleId]);
+      $count = $stmt->rowCount();
+      
+      if ($count>0) {
+         while($articleVersions =$stmt->fetch()) {
+            $articleVersion = $articleVersions ['content_version'];
+            echo "<option value=$articleVersion>Content V$articleVersion</option>";
+         }
+      } 
+  
+   } else {
+      echo "<option value=0 disabled selected>No Version</option>";
+   }
+  
+
+}
+}
+
+
+public function update_article_status (Request $request){
+    if ($request->input('update_article_status_submit')) {
+            $conn=config('app.conn');
+            $currentTime= config('app.currentTime');
+
+            $action = htmlspecialchars($_POST ['action']);
+            $articleId = htmlspecialchars($_POST['article_id']);
+
+            $stmt= $conn->prepare("SELECT * FROM articles WHERE id=?");
+            $stmt->execute([$articleId]);
+
+            $articleRecords = $stmt->fetch();
+
+            if ($articleRecords) {
+                $articlePubDate = $articleRecords ['published'];
+
+                if ($articlePubDate != '0000-00-00 00:00:00') {
+                    $articlePubDate = $articlePubDate;
+                }
+
+                if ($articlePubDate == '0000-00-00 00:00:00') {
+                    $articlePubDate = date("Y-m-d H:i:s", $currentTime);
+                }
+            }
+
+
+            if ($action=='publish') {
+                $status = 'Published';
+            }
+
+            if ($action=='unpublish') {
+                $status = 'Unpublished';
+            }
+
+
+            $stmt= $conn->prepare("UPDATE articles
+                    SET status = ?,
+                    published = ?
+                    WHERE id = ?");
+            
+            $stmt =$stmt->execute([$status,$articlePubDate,$articleId]);
+
+             echo "Successful";
+
+
+            }
+
+}
+
+
+public function add_article (Request $request){
+
+    if ($request->input('article_submit')){
+    
+    $conn= config('app.conn');
+    $userId = session('user_id');
+
+   $storageType = htmlspecialchars($_POST['storage_type']);
+   $articleMode = htmlspecialchars($_POST['article_mode']);
+   $articleId = htmlspecialchars($_POST['article_id']);
+
+   $articleTitle = htmlspecialchars($_POST['article_title']);
+   $slug = generateSlug($articleTitle);
+   $articleCategory = htmlspecialchars($_POST['article_category']);
+   $articleTopic = htmlspecialchars($_POST['article_topic']);
+
+   $articleContentVersion = htmlspecialchars($_POST['article_content_version']);
+   
+   $articleContent = $_POST['article_content'];
+
+    $responses=[];
+      $responses['error'] = [];
+
+   if ($storageType=='session'){
+      if($articleId){
+         $_SESSION ["article-{$articleId}-title"] = $articleTitle;
+         $_SESSION ["article-{$articleId}-category"] = $articleCategory;
+         $_SESSION ["article-{$articleId}-topic"] = $articleTopic;
+         $_SESSION ["article-{$articleId}-content-version"] = $articleContentVersion;
+         $_SESSION ["article-{$articleId}-content"] = $articleContent;
+      }
+
+       if(!$articleId){
+         $_SESSION ["article-title"] = $articleTitle;
+         $_SESSION ["article-category"] = $articleCategory;
+         $_SESSION ["article--topic"] = $articleTopic;
+         $_SESSION ["article-content-version"] = $articleContentVersion;
+         $_SESSION ["article-content"] = $articleContent;
+      }
+   }
+
+
+    if ($storageType=='db'){
+    
+      if (!$articleTitle) {
+
+         $error = 'Please enter the title.';
+
+         array_push($responses['error'],$error); 
+      
+      }
+
+      if (!$articleCategory) {
+      $error = 'Please select a category.';
+        array_push($responses['error'],$error); 
+     
+       
+      }
+
+      if (!$articleTopic) {
+         $error = 'Please select a topic';
+        array_push($responses['error'],$error); 
+    
+        
+      }
+
+
+      //Check if the title already exists
+        
+         $stmt= $conn->prepare("SELECT * FROM articles WHERE title=?");
+         $stmt->execute([$articleTitle]);
+         $articleRecord = $stmt->fetch();
+
+      if ($articleRecord){
+         $article_record_writer_id = $articleRecord ['writer_id'];
+
+         if ($article_record_writer_id != $userId) {
+            $error = 'An article with the same title already exists.';
+            array_push($responses['error'],$error); 
+ 
+         
+         }
+         
+      }
+
+
+      if (!$responses['error']) {
+         
+            if($articleId){
+
+            $stmt= $conn->prepare("SELECT * FROM articles WHERE id=?");
+            $stmt->execute([$articleId]);
+            $articleRecord= $stmt->fetch();
+          
+
+            if ($articleRecord){
+            $latestVersion = (int) $articleRecord['content_version'];
+            $newVersion =  $latestVersion + 1;
+
+            } 
+
+               $stmt = $conn->prepare("UPDATE articles 
+                                    SET title=?,
+                                       category=?,
+                                       topic=?,
+                                       content_version=?
+                                       WHERE id = ?");
+                $stmt->execute([$articleTitle,$articleCategory,$articleTopic,$articleId]);
+
+                $update_articleId = $articleId;
+             
+            }
+
+            if(!$articleId){
+                  $newVersion = 1;
+
+                  $stmt = $conn->prepare("INSERT INTO articles (title,slug,category,topic,writer_id,content_version) VALUES(?,?,?,?,?,?)");
+                  $stmt->execute([$articleTitle,$slug,$articleCategory,$articleTopic,$userId,$newVersion]);
+
+                   $update_articleId =  $conn->lastInsertId();
+
+            }
+
+
+            $stmt = $conn->prepare("INSERT INTO article_content_versions (article_id,content_version,version_content) VALUES(?,?,?)");
+            $stmt->execute([$update_articleId,$newVersion,$articleContent]);
+
+         
+            $responses ['status'] = 'Successful';
+            $responses ['article-id'] = $update_articleId;
+
+             array_push($responses,$responses['status']);
+             array_push($responses,$responses ['article-id']);
+           
+      } else {
+       
+            $responses ['status'] = 'Unsuccessful';
+      }
+
+
+       
+   }
+      
+      if ($responses) {
+      header('Content-Type: application/json');
+      $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+      echo  $jsonResponses;
+   } 
+
+}
+}
+
+
+public function delete_article (Request $request){
+    if ($request->input('delete_submit')) {
+
+    $conn= config('app.conn');
+
+    $deleteId = htmlspecialchars($_POST['id']);
+    $table = 'articles';
+    $column = 'id';
+    $imageCol = 'image';
+
+
+    $stmt = $conn->prepare("SELECT $imageCol FROM $table WHERE $column=?");
+    $stmt->execute([$deleteId]);
+    $imageLink= $stmt->fetch();
+
+    if ($imageLink) {
+        $imageLinkDelete = public_path($imageLink [$imageCol]);
+        $imageDeleted= unlink($imageLinkDelete);
+    }
+
+   $stmt=$conn->prepare("delete from articles where id =  ?");
+   $stmt->execute([$deleteId]);
+
+   $stmt = $conn->prepare("delete from article_content_versions where article_id = ?");
+   $stmt->execute([$deleteId]);
+
+   echo 'Successful';
+ 
+
+}
+}
         
 }
 

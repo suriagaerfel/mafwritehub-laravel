@@ -804,7 +804,7 @@ function initializeArticleTopics() {
 function categoryAdd() {
     var new_category = $("#article-category-add-input").val();
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/add-category",
         type: "POST",
         async: true,
         data: {
@@ -823,7 +823,7 @@ function categoryAdd() {
 function topicAdd() {
     var new_topic = $("#article-topic-add-input").val();
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/add-topic",
         type: "POST",
         async: true,
         data: {
@@ -846,7 +846,7 @@ function categoryDelete() {
     var original_category = $("#article-original-category").val();
 
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/delete-category",
         type: "POST",
         async: true,
         data: {
@@ -866,7 +866,7 @@ function topicDelete() {
     var original_topic = $("#article-original-topic").val();
 
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/delete-topic",
         type: "POST",
         async: true,
         data: {
@@ -899,7 +899,7 @@ function getArticleContentVersions() {
     var article_id = $("#article-id").val();
 
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/get-article-content-versions",
         type: "POST",
         async: true,
         data: {
@@ -926,7 +926,7 @@ function showConfirmDeleteArticleModal() {
 function updateArticleStatus(action) {
     var article_id = $("#article-id").val();
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/update-article-status",
         type: "POST",
         data: {
             action: action,
@@ -944,8 +944,6 @@ function updateArticleStatus(action) {
 }
 
 function saveArticle(storage_type) {
-    var processing_file =
-        "../../private/includes/processing/article-processing.php";
     var article_mode = $("#article-mode").val();
     var article_id = $("#article-id").val();
     var article_title = $("#article-title").val();
@@ -955,8 +953,9 @@ function saveArticle(storage_type) {
     var article_content = $("#summernote").val();
 
     $.ajax({
-        url: processing_file,
+        url: public_folder + "/add-article",
         type: "POST",
+        dataType: "json",
         data: {
             storage_type: storage_type,
             article_mode: article_mode,
@@ -969,7 +968,8 @@ function saveArticle(storage_type) {
             article_submit: true,
         },
         success: function (responses) {
-            if (storage_type == "database") {
+            console.log(responses);
+            if (storage_type == "db") {
                 if (responses["status"] == "Successful") {
                     $("#article-id").val(responses["article-id"]);
                     $("#article-mode").val("edit");
@@ -980,7 +980,7 @@ function saveArticle(storage_type) {
 
                 if (responses["status"] == "Unsuccessful") {
                     $("#article-message").show();
-                    $("#article-message").text(responses["errors"]);
+                    $("#article-message").text(responses["error"]);
                     hideAlerts();
                 }
             }
@@ -1378,18 +1378,18 @@ function showConfirmDeleteModal(message, type, id) {
 function proceedDelete() {
     var type = $("#delete-type").val();
     var id = $("#delete-id").val();
-    var processing_file = "";
+    var action_file = "";
 
     if (type == "article") {
-        processing_file = article_processing_file;
+        action_file = public_folder + "/delete-article";
     }
 
     if (type == "user") {
-        processing_file = users_processing_file;
+        action_file = public_folder + "/delete-user";
     }
 
     $.ajax({
-        url: processing_file,
+        url: action_file,
         type: "POST",
         async: true,
         data: {

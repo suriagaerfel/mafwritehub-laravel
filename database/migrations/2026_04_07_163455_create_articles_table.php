@@ -17,12 +17,12 @@ return new class extends Migration
             $table->longText('title');
             $table->longText('slug');
 
-            $table->string('image', 150);
+            $table->string('image', 150)->nullable();
             $table->string('category', 64);
             $table->string('topic', 100);
 
             $table->integer('writer_id');
-            $table->string('writer_name', 256);
+            $table->string('writer_name', 256)->nullable();
 
             $table->dateTime('drafted')->useCurrent();
 
@@ -31,12 +31,12 @@ return new class extends Migration
                   ->useCurrentOnUpdate()
                   ->useCurrent();
 
-            $table->dateTime('published');
+            $table->dateTime('published')->nullable();
 
             $table->integer('content_version')->default(1);
             $table->string('status', 64)->default('Draft');
 
-            $table->longText('comments');
+            $table->longText('comments')->nullable();
         });
     }
 

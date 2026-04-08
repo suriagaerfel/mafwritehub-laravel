@@ -200,7 +200,7 @@ $(document).ready(function () {
     );
 
     $("#article-save-button").click(function () {
-        var storage_type = "database";
+        var storage_type = "db";
         saveArticle(storage_type);
     });
 
