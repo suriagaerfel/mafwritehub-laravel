@@ -146,7 +146,7 @@
                 </div>
                 <br>
                 <span style="font-size: 10pt;">Forgot your password?</span>
-                <span id="reset-password-button"class='link' style="font-size: 10pt;">Reset now</span>
+                <span id="get-reset-password-otp-button"class='link' style="font-size: 10pt;">Reset now</span>
 
           </div>
         </div>
@@ -157,19 +157,19 @@
 
 
 
-    <?php //-----------------FOR GET PASSWORD RESET LINK----------------------------- ?>
+    <?php //-----------------FOR GET PASSWORD RESET OTP----------------------------- ?>
 
-    <div class="modal website-modal website-modal-wrapper" id="modal-get-password-reset-link">
+    <div class="modal website-modal website-modal-wrapper" id="modal-get-password-reset-otp">
         <div class="website-modal-content">
             <div class="close-modal-container">
                     <a class="close close-without-null-redirection">&times;</a>
             </div>
 
-            <div id="get-link-form">
-                <div id="get-link-message" class="alert" style="display: none;"></div>
+            <div id="get-password-reset-otp-form">
+                <div id="get-otp-message" class="alert" style="display: none;"></div>
                 <h5 class="form-title">Provide Details</h5>
-                <input type="text" placeholder="Email address o username" id="get-password-reset-link-email-username">
-                <button id="get-password-reset-link-submit-button">Get Password Reset Link</button>
+                <input type="text" placeholder="Email address o username" id="get-password-reset-otp-email-username">
+                <button id="get-password-reset-otp-submit-button">Get Password Reset OTP</button>
                 <br>
                 <br>
                 <span class="login-button link" style="font-size: 10pt;">Back to login</span>
@@ -179,6 +179,61 @@
         </div>
 
     </div>
+
+      <?php //-----------------FOR ENTERING PASSWORD RESET OTP----------------------------- ?>
+
+    <div class="modal website-modal website-modal-wrapper" id="modal-otp-for-reset-password">
+        <div class="website-modal-content">
+            <div class="close-modal-container">
+                    <a class="close close-without-null-redirection">&times;</a>
+            </div>
+
+            <div id="enter-password-reset-otp-form">
+               
+                <h5 class="form-title">Enter OTP</h5>
+                <small>An OTP has been sent to your email address. Please enter it here to proceed.</small>
+                 <div id="otp-message" class="alert" style="display: none;"></div>
+                <input type="text" id="password-reset-email-username-otp" hidden>
+                <input type="text" placeholder="000000" id="password-reset-otp">
+                <button id="check-password-reset-otp-submit-button">Proceed</button>
+                <br>
+                <br>
+                <span class="login-button link" style="font-size: 10pt;">Back to login</span>
+                    
+            </div>
+                
+        </div>
+
+    </div>
+
+
+      <?php //-----------------FOR PASSWORD RESET----------------------------- ?>
+
+    <div class="modal website-modal website-modal-wrapper" id="modal-reset-password">
+        <div class="website-modal-content" style="height:fit-content">
+            <div class="close-modal-container">
+                    <a class="close close-without-null-redirection">&times;</a>
+            </div>
+
+            <div id="modal-reset-password-form">
+                <div id="otp-message" class="alert" style="display: none;"></div>
+                <h5 class="form-title">Password Reset</h5>
+                <div id="password-reset-message" class="alert" style="display: none;"></div>
+                <input type="text" id="password-reset-email-username-proceed">
+                <input type="password" placeholder='Type your password' id="new-password">
+                <input type="password" placeholder="Retype your password" id="new-password-retyped">
+                <button id="reset-password-submit-button">Reset</button>
+                <br>
+                <br>
+                <span class="login-button link" style="font-size: 10pt;">Back to login</span>
+                    
+            </div>
+                
+        </div>
+
+    </div>
+
+
 
 
 

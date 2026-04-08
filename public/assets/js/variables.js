@@ -22,22 +22,20 @@ var send_logout_link_processing_file = "";
 var send_verification_link_processing_file = "";
 
 if (page_name == "Home") {
-    article_processing_file =
-        "../private/includes/processing/article-processing.php";
-    login_processing_file =
-        "../private/includes/processing/login-processing.php";
-    logout_processing_file =
-        "../private/includes/processing/logout-processing.php";
-    get_password_reset_link_processing_file =
-        "../private/includes/processing/get-password-link-processing.php";
-    users_processing_file =
-        "../private/includes/processing/users-processing.php";
-
-    send_logout_link_processing_file =
-        "../private/includes/processing/send-logout-link-processing.php";
-
-    send_verification_link_processing_file =
-        "../private/includes/processing/send-verification-link-processing.php";
+    // article_processing_file =
+    //     "../private/includes/processing/article-processing.php";
+    // login_processing_file =
+    //     "../private/includes/processing/login-processing.php";
+    // logout_processing_file =
+    //     "../private/includes/processing/logout-processing.php";
+    // get_password_reset_link_processing_file =
+    //     "../private/includes/processing/get-password-link-processing.php";
+    // users_processing_file =
+    //     "../private/includes/processing/users-processing.php";
+    // send_logout_link_processing_file =
+    //     "../private/includes/processing/send-logout-link-processing.php";
+    // send_verification_link_processing_file =
+    //     "../private/includes/processing/send-verification-link-processing.php";
 } else {
     if (url.href.includes("/articles/")) {
         article_category = $("#hidden-article-category").val();
@@ -47,20 +45,20 @@ if (page_name == "Home") {
         article_slug = $("#hidden-article-slug").val();
         article_search = $("#article-search").val();
 
-        article_processing_file =
-            "../../private/includes/processing/article-processing.php";
-        login_processing_file =
-            "../../private/includes/processing/login-processing.php";
-        logout_processing_file =
-            "../../private/includes/processing/logout-processing.php";
-        get_password_reset_link_processing_file =
-            "../../private/includes/processing/get-password-link-processing.php";
-        users_processing_file =
-            "../../private/includes/processing/users-processing.php";
-        send_logout_link_processing_file =
-            "../../private/includes/processing/send-logout-link-processing.php";
-        send_verification_link_processing_file =
-            "../../private/includes/processing/send-verification-link-processing.php";
+        // article_processing_file =
+        //     "../../private/includes/processing/article-processing.php";
+        // login_processing_file =
+        //     "../../private/includes/processing/login-processing.php";
+        // logout_processing_file =
+        //     "../../private/includes/processing/logout-processing.php";
+        // get_password_reset_link_processing_file =
+        //     "../../private/includes/processing/get-password-link-processing.php";
+        // users_processing_file =
+        //     "../../private/includes/processing/users-processing.php";
+        // send_logout_link_processing_file =
+        //     "../../private/includes/processing/send-logout-link-processing.php";
+        // send_verification_link_processing_file =
+        //     "../../private/includes/processing/send-verification-link-processing.php";
 
         if (
             article_category ||
@@ -69,37 +67,37 @@ if (page_name == "Home") {
             article_writer ||
             article_slug
         ) {
-            article_processing_file =
-                "../../../private/includes/processing/article-processing.php";
-            login_processing_file =
-                "../../../private/includes/processing/login-processing.php";
-            logout_processing_file =
-                "../../../private/includes/processing/logout-processing.php";
-            get_password_reset_link_processing_file =
-                "../../../private/includes/processing/get-password-link-processing.php";
-            users_processing_file =
-                "../../../private/includes/processing/users-processing.php";
-            send_logout_link_processing_file =
-                "../../../private/includes/processing/send-logout-link-processing.php";
-            send_verification_link_processing_file =
-                "../../../private/includes/processing/send-verification-link-processing.php";
+            // article_processing_file =
+            //     "../../../private/includes/processing/article-processing.php";
+            // login_processing_file =
+            //     "../../../private/includes/processing/login-processing.php";
+            // logout_processing_file =
+            //     "../../../private/includes/processing/logout-processing.php";
+            // get_password_reset_link_processing_file =
+            //     "../../../private/includes/processing/get-password-link-processing.php";
+            // users_processing_file =
+            //     "../../../private/includes/processing/users-processing.php";
+            // send_logout_link_processing_file =
+            //     "../../../private/includes/processing/send-logout-link-processing.php";
+            // send_verification_link_processing_file =
+            //     "../../../private/includes/processing/send-verification-link-processing.php";
         }
     }
 
     if (!url.href.includes("/articles/")) {
-        article_processing_file =
-            "../../private/includes/processing/article-processing.php";
-        login_processing_file =
-            "../../private/includes/processing/login-processing.php";
-        logout_processing_file =
-            "../../private/includes/processing/logout-processing.php";
-        get_password_reset_link_processing_file =
-            "../../private/includes/processing/get-password-link-processing.php";
-        users_processing_file =
-            "../../private/includes/processing/users-processing.php";
-        send_logout_link_processing_file =
-            "../../private/includes/processing/send-logout-link-processing.php";
-        send_verification_link_processing_file =
-            "../../private/includes/processing/send-verification-link-processing.php";
+        // article_processing_file =
+        //     "../../private/includes/processing/article-processing.php";
+        // login_processing_file =
+        //     "../../private/includes/processing/login-processing.php";
+        // logout_processing_file =
+        //     "../../private/includes/processing/logout-processing.php";
+        // get_password_reset_link_processing_file =
+        //     "../../private/includes/processing/get-password-link-processing.php";
+        // users_processing_file =
+        //     "../../private/includes/processing/users-processing.php";
+        // send_logout_link_processing_file =
+        //     "../../private/includes/processing/send-logout-link-processing.php";
+        // send_verification_link_processing_file =
+        //     "../../private/includes/processing/send-verification-link-processing.php";
     }
 }

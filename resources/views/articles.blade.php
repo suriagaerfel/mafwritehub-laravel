@@ -99,6 +99,8 @@ $featuredSlug = isset($_GET['slug']) ? urlencode($_GET['slug']) : '';
 @include('components/head')
 @include('components/header')
 
+<body>
+    
 
 <div id="article-page" class='page' style="margin-top:20px; background-image: url(<?php echo $publicFolder.'/assets/images/home-image.jpg'?>); display:flex;">
 
@@ -119,7 +121,8 @@ $featuredSlug = isset($_GET['slug']) ? urlencode($_GET['slug']) : '';
             
                     <strong style="position:sticky;top:0;">Table of Contents</strong>
                 </div>
-                    <?php require (SECTION_PATH.'/native-ad.php'); ?>
+              
+                    @include('components/native-ad')
                 
 
             </div>
@@ -153,8 +156,8 @@ $featuredSlug = isset($_GET['slug']) ? urlencode($_GET['slug']) : '';
                                 <em>Updated: </em><em><?php echo dcomplete_format($articleUpdateDate);?></em>
                             </div>
                         <?php } ?>
-                       
-                        <?php require (SECTION_PATH.'/share-with.php'); ?>
+                    
+                        @include('components/share-with')
                        
                         
  
@@ -175,9 +178,8 @@ $featuredSlug = isset($_GET['slug']) ? urlencode($_GET['slug']) : '';
 
                 </ul>
 
-                
 
-                <?php require (SECTION_PATH.'/native-ad.php'); ?>
+                @include('components/native-ad')
 
                 <div id="<?php echo 'article-writer-description-'.$articleWriterUsername?>" style="height:fit-content; background-color:white; box-shadow:inset; padding:15px;border-radius:15px;" >
                     <p><?php echo $articleWriterDescription?></p>
@@ -192,7 +194,7 @@ $featuredSlug = isset($_GET['slug']) ? urlencode($_GET['slug']) : '';
              <?php if ($articleStatus != 'Published') {?>
                 <div class="content-notice" style="padding:50px 200px 20px 200px;">
                     <p >Opps!<?php echo $articleTitle?> is currently not published.</p>
-                    <?php require (SECTION_PATH.'/native-ad.php'); ?>
+                    @include('components/native-ad')
                 </div>
             <?php }  ?>
 
@@ -201,7 +203,7 @@ $featuredSlug = isset($_GET['slug']) ? urlencode($_GET['slug']) : '';
             <?php if (!$articleInfo) {?>
                 <div class="content-notice" style="padding:50px 200px 20px 200px;">
                     <p >Opps! We cannot find the article.</p>
-                    <?php require (SECTION_PATH.'/native-ad.php'); ?>
+                    @include('components/native-ad')
                 </div>
             <?php }  ?>
 
@@ -234,5 +236,7 @@ $featuredSlug = isset($_GET['slug']) ? urlencode($_GET['slug']) : '';
 
 
 @include('components/footer-scripts')
+
+</body>
 
 </x-main>

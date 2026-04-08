@@ -129,4 +129,46 @@ class PageController extends Controller
     }
 
 
+    public function reset_password ($token,$user_id){
+
+        $pageName = 'Reset Password';
+
+        $conn=config('app.conn');
+        
+        
+        $stmt = $conn->prepare ("SELECT * FROM users WHERE id= ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch();
+
+        if ($user) {
+        
+            $real_password_reset_token = $user['password_reset_token'];
+            $real_password_reset_token_expiration = strtotime($user['password_reset_token_expiration']);
+
+            if ($token== $real_password_reset_token) {
+                                
+                if ($real_password_reset_token_expiration-time()>0) {
+                
+                   
+                    return view('reset-password',compact('pageName','token','user_id'))->with('reset-now',true);
+
+                } else {
+              
+                    return redirect(route('home'))->with('link-expired',true);
+                }
+                
+            } else {
+             
+                return redirect(route('home'))->with('not-you',true);    
+            }
+
+        } else {
+           return redirect(route('home'))->with('account-not-found',true);   
+            
+        }
+
+
+    }
+
+
 }

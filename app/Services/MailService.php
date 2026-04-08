@@ -15,12 +15,12 @@ class MailService
             $mailer->isSMTP();
             $mailer->Host = "smtp.gmail.com";
             $mailer->SMTPAuth = true;
-            $mailer->Username = "eskquip@gmail.com";
-            $mailer->Password = "aefe osht kypq tyuv";
+            $mailer->Username = "mafwritehub@gmail.com";
+            $mailer->Password = "dwyg oxcp dglv vwur";
             $mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mailer->Port = 587;
 
-            $mailer->setFrom('eskquip@gmail.com', 'EskQuip');
+            $mailer->setFrom('mafwritehub@gmail.com', 'Maf Write Hub');
             $mailer->addAddress($email);
 
             $mailer->isHTML(true);

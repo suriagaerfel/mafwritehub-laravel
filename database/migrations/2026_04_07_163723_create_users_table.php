@@ -40,8 +40,12 @@ return new class extends Migration
 
             $table->dateTime('created')->useCurrent();
 
-            $table->string('reset_token_hash', 64);
-            $table->dateTime('reset_token_expiration');
+            $table->string('logout_token', 64);
+             $table->dateTime('logout_token_expiration');
+            $table->string('verification_token', 64);
+            $table->dateTime('verification_token_expiration');
+            $table->string('password_reset_otp', 64);
+            $table->dateTime('password_reset_otp_expiration');
         });
     }
 

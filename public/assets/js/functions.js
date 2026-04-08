@@ -141,38 +141,25 @@ function login() {
                     responses["error"] ==
                     "Your account is not yet verified. Check your email to verify."
                 ) {
-                    processing_file =
-                        "../private/includes/processing/send-verification-link-processing.php";
-                    $.ajax({
-                        url: processing_file,
-                        type: "POST",
-                        async: true,
-                        data: {
-                            verifying_email_address:
-                                responses["temporary-session-email-address"],
-                            verifying_userid:
-                                responses["temporary-session-userid"],
-                            old_verify_submit: true,
-                        },
-                    });
+                    let verifying_email_address =
+                        responses["temporary-session-email-address"];
+                    let verifying_userid =
+                        responses["temporary-session-userid"];
+                    sendVerificationLink(
+                        verifying_email_address,
+                        verifying_userid,
+                    );
                 }
 
                 if (
                     responses["error"] ==
                     "You are logged in in the other device. Open the email sent to log out."
                 ) {
-                    $.ajax({
-                        url: send_logout_link_processing_file,
-                        type: "POST",
-                        async: true,
-                        data: {
-                            logout_email_address:
-                                responses["temporary-session-email-address"],
-                            logout_userid:
-                                responses["temporary-session-userid"],
-                            logout_submit: true,
-                        },
-                    });
+                    let logout_email_address =
+                        responses["temporary-session-email-address"];
+                    let logout_userid = responses["temporary-session-userid"];
+
+                    sendLogoutLink(logout_email_address, logout_userid);
                 }
             }
 
@@ -183,37 +170,73 @@ function login() {
     });
 }
 
-function showGetPasswordResetLinkModal() {
-    $("#modal-get-password-reset-link").show();
+function sendLogoutLink(logout_email_address, logout_userid) {
+    $.ajax({
+        url: public_folder + "/send-logout-link",
+        type: "POST",
+        dataType: "json",
+        async: true,
+        data: {
+            logout_email_address: logout_email_address,
+            logout_userid: logout_userid,
+            send_logout_link_submit: true,
+        },
+    });
+}
+
+function sendVerificationLink(verifying_email_address, verifying_userid) {
+    $.ajax({
+        url: public_folder + "/send-verification-link",
+        type: "POST",
+        dataType: "json",
+        async: true,
+        data: {
+            verifying_email_address: verifying_email_address,
+            verifying_userid: verifying_userid,
+            send_verification_link_submit: true,
+        },
+    });
+}
+
+function showGetPasswordResetOTPModal() {
+    $("#modal-get-password-reset-otp").show();
     $("#modal-login").hide();
 }
 
-function getPasswordResetLink() {
+function getPasswordResetOTP() {
     var password_reset_email_username = $(
-        "#get-password-reset-link-email-username",
+        "#get-password-reset-otp-email-username",
     ).val();
 
     $.ajax({
-        url: get_password_reset_link_processing_file,
+        url: public_folder + "/get-password-reset-otp",
         type: "POST",
+        dataType: "json",
         async: true,
         data: {
             password_reset_email_username: password_reset_email_username,
             get_password_link_submit: true,
         },
         success: function (responses) {
-            $("#get-link-message").show();
+            $("#get-otp-message").show();
 
             if (responses["error"] == "No error") {
-                $("#get-link-message").html(
-                    "The password reset link has been sent to your email address.",
+                // $("#get-link-message").html(
+                //     "The password reset link has been sent to your email address.",
+                // );
+
+                // $("#get-link-message").addClass("alert-success");
+
+                $("#modal-get-password-reset-otp").hide();
+                $("#modal-otp-for-reset-password").show();
+                $("#password-reset-email-username-otp").val(
+                    password_reset_email_username,
                 );
-                $("#get-link-message").addClass("alert-success");
             }
 
             if (responses["error"] != "No error") {
-                $("#get-link-message").html(responses["error"]);
-                $("#get-link-message").addClass("alert-danger");
+                $("#get-otp-message").html(responses["error"]);
+                $("#get-otp-message").addClass("alert-danger");
             }
 
             console.log(responses);
@@ -221,17 +244,84 @@ function getPasswordResetLink() {
     });
 }
 
-function logOut() {
+function checkOTPPasswordReset() {
+    resetAlerts();
+
+    let otp = $("#password-reset-otp").val();
+    let credential = $("#password-reset-email-username-otp").val();
+
     $.ajax({
-        url: logout_processing_file,
+        url: public_folder + "/check-password-reset-otp",
         type: "POST",
+        dataType: "json",
         async: true,
         data: {
-            session_userid: session_userid,
+            otp: otp,
+            credential: credential,
+            check_password_reset_otp_submit: true,
+        },
+        success: function (responses) {
+            console.log(responses);
+            if (responses["error"] == "No error") {
+                $(".modal").hide();
+                $("#modal-reset-password").show();
+                $("#password-reset-email-username-proceed").val(credential);
+            }
+
+            if (responses["error"] !== "No error") {
+                $("#otp-message").show();
+                $("#otp-message").addClass("alert-danger");
+                $("#otp-message").html(responses["error"]);
+            }
+        },
+    });
+}
+
+function resetPassword() {
+    let new_password = $("#new-password").val();
+    let new_password_retyped = $("#new-password-retyped").val();
+    let credential = $("#password-reset-email-username-proceed").val();
+
+    $.ajax({
+        url: public_folder + "/reset-password",
+        type: "POST",
+        dataType: "json",
+        async: true,
+        data: {
+            new_password: new_password,
+            new_password_retyped: new_password_retyped,
+            credential: credential,
+            reset_password_submit: true,
+        },
+        success: function (responses) {
+            console.log(responses);
+
+            if (responses["error"] == "No error") {
+                $(".modal").hide();
+                $("#modal-login").show();
+                $("#login-message").text(
+                    "You reset your password successfully.",
+                );
+            }
+
+            if (responses["error"] != "No error") {
+                $("#password-reset-message").html(responses["error"]);
+            }
+        },
+    });
+}
+
+function logOut() {
+    $.ajax({
+        url: public_folder + "/logout",
+        type: "POST",
+        dataType: "json",
+        async: true,
+        data: {
             logout_submit: true,
         },
-        success: function (response) {
-            if (response == "Logout successful") {
+        success: function (responses) {
+            if (responses["status"] == "Successful") {
                 url.reload();
             }
         },

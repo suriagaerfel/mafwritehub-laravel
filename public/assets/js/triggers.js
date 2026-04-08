@@ -25,7 +25,9 @@ $(document).ready(function () {
     });
 
     $(".login-button").click(function () {
+        resetAlerts();
         $(".modal").hide();
+        $("#modal-login").show();
         $("#modal-login").show();
     });
 
@@ -39,17 +41,26 @@ $(document).ready(function () {
         }
     });
 
-    $("#reset-password-button").click(function () {
-        showGetPasswordResetLinkModal();
+    $("#check-password-reset-otp-submit-button").click(function () {
+        checkOTPPasswordReset();
     });
 
-    $("#get-password-reset-link-submit-button").click(function () {
-        getPasswordResetLink();
+    $("#reset-password-submit-button").click(function () {
+        resetPassword();
     });
 
-    $("#get-password-reset-link-email-username").keydown(function (event) {
+    $("#get-reset-password-otp-button").click(function () {
+        resetAlerts();
+        showGetPasswordResetOTPModal();
+    });
+
+    $("#get-password-reset-otp-submit-button").click(function () {
+        getPasswordResetOTP();
+    });
+
+    $("#get-password-reset-otp-email-username").keydown(function (event) {
         if (event.keyCode === 13) {
-            getPasswordResetLink();
+            getPasswordResetOTP();
         }
     });
 

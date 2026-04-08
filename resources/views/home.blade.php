@@ -145,7 +145,7 @@
      @include('components/footer-links')
    
 </div>
-
+    @include('components/footer-scripts')
  </body>
 
 

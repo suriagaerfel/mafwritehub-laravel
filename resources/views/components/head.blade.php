@@ -10,8 +10,6 @@
     <link rel="icon" href="<?php echo $publicFolder.'/images/eskquip-icon-new.png';?>">
     <title><?php echo $pageName?></title>
 
-
-
     <!-- include libraries(jQuery) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
