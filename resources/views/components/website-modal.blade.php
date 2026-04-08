@@ -166,8 +166,8 @@
             </div>
 
             <div id="get-password-reset-otp-form">
-                <div id="get-otp-message" class="alert" style="display: none;"></div>
                 <h5 class="form-title">Provide Details</h5>
+                <div id="get-otp-message" class="alert" style="display: none;"></div>
                 <input type="text" placeholder="Email address o username" id="get-password-reset-otp-email-username">
                 <button id="get-password-reset-otp-submit-button">Get Password Reset OTP</button>
                 <br>

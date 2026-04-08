@@ -114,6 +114,7 @@ function saveProfile() {
 }
 
 function login() {
+    resetAlerts();
     var login_email_username = $("#login-email-username").val();
     var login_password = $("#login-password").val();
 
@@ -204,6 +205,8 @@ function showGetPasswordResetOTPModal() {
 }
 
 function getPasswordResetOTP() {
+    resetAlerts();
+
     var password_reset_email_username = $(
         "#get-password-reset-otp-email-username",
     ).val();
@@ -272,12 +275,15 @@ function checkOTPPasswordReset() {
                 $("#otp-message").show();
                 $("#otp-message").addClass("alert-danger");
                 $("#otp-message").html(responses["error"]);
+
+                hideAlerts();
             }
         },
     });
 }
 
 function resetPassword() {
+    resetAlerts();
     let new_password = $("#new-password").val();
     let new_password_retyped = $("#new-password-retyped").val();
     let credential = $("#password-reset-email-username-proceed").val();
@@ -298,14 +304,21 @@ function resetPassword() {
 
             if (responses["error"] == "No error") {
                 $(".modal").hide();
-                $("#modal-login").show();
+                $("#login-message").show();
+                $("#login-message").addClass("alert-success");
                 $("#login-message").text(
                     "You reset your password successfully.",
                 );
+
+                hideAlerts();
             }
 
             if (responses["error"] != "No error") {
+                $("#password-reset-message").show();
+                $("#password-reset-message").addClass("alert-danger");
                 $("#password-reset-message").html(responses["error"]);
+
+                hideAlerts();
             }
         },
     });
@@ -349,7 +362,7 @@ function getHomeArticles() {
 
 function getAuthors() {
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/get-authors",
         type: "POST",
         async: true,
         data: {
@@ -368,7 +381,7 @@ function getArticles() {
     var page = $("#article-current-page").val();
 
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/get-articles",
         type: "POST",
         async: true,
         data: {
@@ -430,7 +443,7 @@ function initializeArticlePanel() {
         $("#article-publish-button").show();
         $("#article-unpublish-button").show();
         $.ajax({
-            url: "../../private/includes/processing/article-processing.php",
+            url: public_folder + "/get-article",
             type: "POST",
             async: true,
             data: {
@@ -523,7 +536,7 @@ function getVersionContent() {
     var article_id = $("#article-id").val();
 
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/get-version-content",
         type: "POST",
         async: true,
         data: {
@@ -713,7 +726,7 @@ function getArticleCategories() {
     }
 
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/get-article-categories",
         type: "POST",
         async: true,
         data: {
@@ -746,7 +759,7 @@ function getArticleTopics() {
     }
 
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/get-article-topics",
         type: "POST",
         async: true,
         data: {
@@ -980,7 +993,7 @@ function getUsers() {
     var page = $("#user-current-page").val();
 
     $.ajax({
-        url: "../../private/includes/processing/users-processing.php",
+        url: public_folder + "/get-users",
         type: "POST",
         async: true,
         data: {

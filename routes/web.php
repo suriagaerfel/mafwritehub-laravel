@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\PageController;
 use App\Http\Middleware\AccountRecordsMiddleware;
 
@@ -49,4 +50,10 @@ Route::post('/check-password-reset-otp', [AccountController::class, 'check_passw
 Route::post('/reset-password', [AccountController::class, 'reset_password']);
 
 Route::post('/login', [AccountController::class, 'login']);
+Route::post('/get-authors', [ContentsController::class, 'get_authors']);
+Route::post('/get-articles', [ContentsController::class, 'get_articles']);
+Route::post('/get-article', [ContentsController::class, 'get_article']);
+Route::post('/get-version-content', [ContentsController::class, 'get_version_content']);
+Route::post('/get-article-categories', [ContentsController::class, 'get_article_categories']);
+Route::post('/get-article-topics', [ContentsController::class, 'get_article_topics']);
 
