@@ -73,14 +73,14 @@ class AppServiceProvider extends ServiceProvider
             $publicFolder= $domain; 
             $privateFolder=$domain.'/private';
 
-            if(str_contains($domain,'localhost')){
-                $projectName = '/mafwritehub-laravel';
-                $domain = $domain.$projectName;
+            // if(str_contains($domain,'localhost')){
+            //     $projectName = '/mafwritehub-laravel';
+            //     $domain = $domain.$projectName;
 
-                $publicFolder= $domain.'/public'; 
-                $privateFolder=$domain.'/private';
+            //     $publicFolder= $domain.'/public'; 
+            //     $privateFolder=$domain.'/private';
 
-            }
+            // }
 
         }
 
