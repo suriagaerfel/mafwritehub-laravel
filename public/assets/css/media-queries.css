@@ -1,13 +1,32 @@
 /*Mobile version*/
 @media only screen and (max-width: 767px) {
+    #modal-edit-profile .website-modal-content,
+    #modal-add-edit-article .website-modal-content {
+        width: 350px !important;
+    }
 }
 
 /*On tablet, hide header navigation buttons and show the navigation container.*/
 @media only screen and (768px <= width) {
+    #modal-edit-profile .website-modal-content {
+        width: 80% !important;
+    }
 }
 
 /*While not yet on the desktop mode, the search input is hidden to gice space to the navigation container.*/
 @media only screen and (width <=1023px) {
+    #dashboard-page {
+        flex-direction: column !important;
+    }
+
+    #dashboard-menus {
+        flex-direction: row !important;
+        width: fit-content;
+    }
+
+    .panel-heading {
+        display: inline;
+    }
 }
 
 /*Between tablet and desktop modes...*/

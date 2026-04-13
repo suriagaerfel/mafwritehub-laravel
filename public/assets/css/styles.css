@@ -768,6 +768,14 @@ hr {
     padding: 15px;
 }
 
+#dashboard-menus {
+    width: 50px;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .dashboard-sections {
     width: 100%;
     height: auto;

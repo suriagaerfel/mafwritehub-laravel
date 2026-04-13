@@ -437,8 +437,6 @@ function initializeArticlePanel() {
     appendToToolBar();
 
     if (article_mode == "edit") {
-        $("#article-category-delete-submit-button").show();
-
         $("#article-delete-button").show();
         $("#article-publish-button").show();
         $("#article-unpublish-button").show();
@@ -503,8 +501,6 @@ function initializeArticlePanel() {
     }
 
     if (article_mode == "new") {
-        $("#article-category-delete-submit-button").hide();
-
         $("#article-delete-button").hide();
         $("#article-publish-button").hide();
         $("#article-unpublish-button").hide();
@@ -786,7 +782,13 @@ function initializeArticleCategory() {
             $(".article-category-update").hide();
         } else {
             if (selected_category != "Add") {
-                $("#article-category-delete-submit-button").show();
+                if (selected_category == "Select") {
+                    $("#article-category-delete-submit-button").hide();
+                }
+
+                if (selected_category != "Select") {
+                    $("#article-category-delete-submit-button").show();
+                }
             }
         }
     }
@@ -883,6 +885,7 @@ function topicDelete() {
 function closeAddCategory() {
     $(".article-category-add").hide();
     $(".article-category-update").show();
+    $("#article-category-delete-submit-button").hide();
 
     getArticleCategories();
 }

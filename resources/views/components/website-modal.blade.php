@@ -251,18 +251,17 @@
             <div id="add-edit-article-container">
                 <div id="article-message" class="alert alert-danger"></div>
                 <div id="article-head-details" style="display: flex; gap:10px; flex-direction:column;">
-                    
-                    <div style="display: flex; gap:10px;">
-                        <input type="text" id="article-mode" hidden>
-                        <input type="text" id="article-id" hidden>
-                        <input type="text" id="article-title" placeholder="Title">
+                    <input type="text" id="article-mode" hidden>
+                    <input type="text" id="article-id" hidden>
+                    <input type="text" id="article-title" placeholder="Title">
+                    <div style="display: flex; flex-direction:column; gap:10px;">
                         <div style="display: flex; flex-direction:column; width:100%;">
                             <div style="display: flex; gap:10px;" class="article-category-update">
                                 <input type="text" id="article-original-category" hidden>
                                 <select id="article-category" class="article-category-update">
                                    <option id="article-originally-selected-category" selected></option>
                                 </select>
-                                <img src="<?php echo $publicFolder.'/assets/images/minus.png'?>" class="icon article-category-update" id="article-category-delete-submit-button">
+                                <img src="<?php echo $publicFolder.'/assets/images/minus.png'?>" class="icon article-category-update" id="article-category-delete-submit-button" style="display: none;">
                             </div>
                             <div style="display: flex; gap:10px;" class="article-category-add">
                                 <input type="text" placeholder="Add category..." class="new article-category-add" id="article-category-add-input">
@@ -278,7 +277,7 @@
                                 <select id="article-topic" class="article-topic-update">   
                                     <option id="article-originally-selected-topic" selected></option>  
                                 </select>
-                                <img src="<?php echo $publicFolder.'/assets/images/minus.png'?>" class="icon article-topic-update" id="article-topic-delete-submit-button">
+                                <img src="<?php echo $publicFolder.'/assets/images/minus.png'?>" class="icon article-topic-update" id="article-topic-delete-submit-button" style="display: none;">
                             </div>
 
                             <div style="display: flex; gap:10px;" class="article-topic-add">
@@ -386,7 +385,7 @@
 
 
 
-    <?php //-----------------FOR ADDING/EDITING USERS----------------------------- ?>
+    <?php //-----------------FOR EDITING PROFILE----------------------------- ?>
 
     <div class="modal website-modal website-modal-wrapper" id="modal-edit-profile">
         <div class="website-modal-content" style="width: 40%; height:fit-content; margin:auto;">

@@ -7,14 +7,14 @@
     @include ('components/header')
 
     <div id="dashboard-page" class="page" style="background-image: url(<?php echo $publicFolder.'/assets/images/home-image.jpg'?>);">
-        <div id="dashboard-menus" class="dashboard-sections" style="width: 50px; height:max-content; display:flex; flex-direction:column;gap:20px;">
+        <div id="dashboard-menus" class="dashboard-sections">
             <a href="<?php echo $publicFolder;?>"><img src="<?php echo $publicFolder.'/assets/images/home.png'?>" class="icon"></a>
             
             <?php if ($type == 'Owner') {?>
-                <img src="<?php echo $publicFolder.'/assets/images/settings.png'?>" class="icon">
+                <a href=""><img src="<?php echo $publicFolder.'/assets/images/settings.png'?>" class="icon"></a>
             <?php } ?>
 
-                <img src="<?php echo $publicFolder.'/assets/images/logout.png'?>" class="icon" id="dashboard-logout-button">
+                <a href=""><img src="<?php echo $publicFolder.'/assets/images/logout.png'?>" class="icon" id="dashboard-logout-button"></a>
             </span>
           
 
