@@ -169,10 +169,10 @@ a:active {
 small {
     margin-top: 7px;
 }
-ul,
+/* ul,
 li {
     list-style: none;
-}
+} */
 
 span {
     display: inline-block;

@@ -2,14 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\ContentsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
 use App\Http\Middleware\AccountRecordsMiddleware;
-
-
-
-
-
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
@@ -26,6 +22,8 @@ Route::get('/articles/category/{category}', [PageController::class, 'articles'])
 Route::get('/articles/tag/{tag}', [PageController::class, 'articles']);
 Route::get('/articles/writer/{owner}', [PageController::class, 'articles']);
 Route::get('/articles/date/{date}', [PageController::class, 'articles']);
+Route::get('/article/{date}', [PageController::class, 'edit_article']);
+Route::get('/article/', [PageController::class, 'add_article']);
 
 
 
@@ -41,19 +39,21 @@ Route::post('/check-password-reset-otp', [AccountController::class, 'check_passw
 Route::post('/reset-password', [AccountController::class, 'reset_password']);
 
 
+Route::post('/get-profile', [DashboardController::class, 'get_profile']);
+Route::post('/get-authors', [DashboardController::class, 'get_authors']);
+Route::post('/get-articles', [DashboardController::class, 'get_articles']);
+Route::post('/get-article', [DashboardController::class, 'get_article']);
+Route::post('/get-version-content', [DashboardController::class, 'get_version_content']);
+Route::post('/get-article-categories', [DashboardController::class, 'get_article_categories']);
+Route::post('/get-article-topics', [DashboardController::class, 'get_article_topics']);
+Route::post('/add-category', [DashboardController::class, 'add_category']);
+Route::post('/add-topic', [DashboardController::class, 'add_topic']);
+Route::post('/delete-category', [DashboardController::class, 'delete_category']);
+Route::post('/delete-topic', [DashboardController::class, 'delete_topic']);
+Route::post('/get-article-content-versions', [DashboardController::class, 'get_article_content_versions']);
+Route::post('/update-article-status', [DashboardController::class, 'update_article_status']);
+Route::post('/add-article', [DashboardController::class, 'add_article']);
+Route::post('/delete-article', [DashboardController::class, 'delete_article']);
 
-Route::post('/get-authors', [ContentsController::class, 'get_authors']);
-Route::post('/get-articles', [ContentsController::class, 'get_articles']);
-Route::post('/get-article', [ContentsController::class, 'get_article']);
-Route::post('/get-version-content', [ContentsController::class, 'get_version_content']);
-Route::post('/get-article-categories', [ContentsController::class, 'get_article_categories']);
-Route::post('/get-article-topics', [ContentsController::class, 'get_article_topics']);
-Route::post('/add-category', [ContentsController::class, 'add_category']);
-Route::post('/add-topic', [ContentsController::class, 'add_topic']);
-Route::post('/delete-category', [ContentsController::class, 'delete_category']);
-Route::post('/delete-topic', [ContentsController::class, 'delete_topic']);
-Route::post('/get-article-content-versions', [ContentsController::class, 'get_article_content_versions']);
-Route::post('/update-article-status', [ContentsController::class, 'update_article_status']);
-Route::post('/add-article', [ContentsController::class, 'add_article']);
-Route::post('/delete-article', [ContentsController::class, 'delete_article']);
+Route::post('/get-users', [DashboardController::class, 'get_users']);
 

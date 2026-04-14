@@ -28,14 +28,10 @@
                 $articleListTopic = $articlesList ['topic'];
                 $articleListContentVersion = $articlesList ['content_version'];
 
-                $sqlArticleVersion = "SELECT * FROM article_content_versions WHERE article_id= $articleListId AND content_version = $articleListContentVersion";
-                $sqlArticleVersionResult = mysqli_query($conn, $sqlArticleVersion);
-                $articleVersion= $sqlArticleVersionResult->fetch_assoc();
-
                 $stmt=$conn->prepare("SELECT * FROM article_content_versions WHERE article_id= ? AND content_version = ?");
 
                 $stmt->execute([$articleListId,$articleListContentVersion]);
-
+                $articleVersion = $stmt->fetch();
 
                 if ($articleVersion){
                     $articleListContent = $articleVersion ['version_content'];
@@ -49,10 +45,6 @@
 
                 $articleListWriterId = $articlesList ['writer_id'];
             
-                $sqlArticleListWriterInfo = "SELECT name FROM users WHERE id = '$articleListWriterId'";
-                $sqlArticleListWriterInfoResult = mysqli_query($conn,$sqlArticleListWriterInfo);
-                $articleListWriterInfo =$sqlArticleListWriterInfoResult->fetch_assoc();
-
                 $stmt=$conn->prepare("SELECT name FROM users WHERE id = ?");
                 $stmt->execute([$articleListWriterId]);
                 $articleListWriterInfo = $stmt->fetch();
@@ -61,7 +53,7 @@
                 $articleListWriteDate = dcomplete_format($articlesList ['drafted']);
                 $articleListPubDate = dcomplete_format($articlesList ['published']);
                 $articleListUpdateDate =dcomplete_format($articlesList ['updated']);
-                $articleListImage = $articlesList ['image'] ? $privateFolder.$articlesList ['image'] : $website.'/assets/images/default-featured-image.jpg';
+                $articleListImage = $articlesList ['image'] ? $privateFolder.$articlesList ['image'] : $publicFolder.'/assets/images/default-featured-image.jpg';
 
                 ?>
 
@@ -75,7 +67,7 @@
                             <?php echo $articleListContent; ?>
                         </div>
                         <div class="list-buttons-container" style="display: flex; gap:10px;">
-                            <a class="link-tag-button" href="<?php echo $website.'/articles/read/'.$articleListSlug;?>">Read</a>
+                            <a class="link-tag-button" href="<?php echo $publicFolder.'/articles/read/'.$articleListSlug;?>">Read</a>
                             <small><?php echo $articleListWriter;?></small>
                             <small><?php echo $articleListCategory;?></small>
                             <small><?php echo $articleListTopic;?></small>

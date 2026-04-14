@@ -1,0 +1,23 @@
+.toolbar {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #fafafa;
+}
+
+button {
+    margin-right: 5px;
+}
+
+.ProseMirror {
+    border: 1px solid #ccc;
+    min-height: 300px;
+    padding: 10px;
+}
+
+img,
+video {
+    max-width: 100%;
+    resize: both;
+    overflow: auto;
+}

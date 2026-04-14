@@ -36,11 +36,10 @@ function resetAlerts() {
 }
 
 function getProfile() {
-    var processing_file =
-        "../../private/includes/processing/users-processing.php";
     $.ajax({
-        url: processing_file,
+        url: public_folder + "/get-profile",
         type: "POST",
+        dataType: "json",
         async: true,
         data: {
             get_profile_submit: true,

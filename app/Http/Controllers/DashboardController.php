@@ -5,12 +5,6 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
-use App\Models\Registration;
-use App\Services\AccountRecordsService;
-use Illuminate\Support\Facades\Route;
-
-use App\Services\MailService;
-use App\Services\FunctionsService;
 
 
 
@@ -19,9 +13,52 @@ use App\Services\FunctionsService;
 
 
 
-class ContentsController extends Controller
+
+class DashboardController extends Controller
 {   
      
+
+    public function get_profile (Request $request){
+        if ($request->input('get_profile_submit')) {
+            $conn= config('app.conn');
+
+            $registrantId= session('user_id');
+
+            $stmt = $conn->prepare("SELECT * FROM users WHERE id=?");
+            $stmt->execute([$registrantId]);
+            $profile= $stmt ->fetch();
+
+        if ($profile){
+            $profileDescription = $profile ['description'];
+            $profileFirstName = $profile ['first_name'];
+            $profileMiddleName = $profile ['middle_name'];
+            $profileLastName = $profile ['last_name'];
+            $profileEmailAddress = $profile ['email_address'];
+            $profileUsername = $profile ['username'];
+            $profileAccountType = $profile ['type'];
+
+            $responses = [];
+            $responses ['profile-description'] = $profileDescription;
+            $responses ['profile-first-name'] = $profileFirstName;
+            $responses ['profile-middle-name'] = $profileMiddleName;
+            $responses ['profile-last-name'] = $profileLastName;
+            $responses ['profile-email-address'] = $profileEmailAddress;
+            $responses ['profile-username'] = $profileUsername;
+            $responses ['profile-account-type'] = $profileAccountType;
+
+
+            if ($responses) {
+            header('Content-Type: application/json');
+            $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+            echo  $jsonResponses;
+            } else {
+                echo '';
+            }
+
+        }
+   
+}
+    }
 
         public function get_authors (Request $request){
         if ($request->input('get_authors_submit')){
@@ -727,6 +764,216 @@ public function delete_article (Request $request){
  
 
 }
+}
+
+
+
+public function add_profile (Request $request){
+    if ($request->input('profile_submit')) {
+    
+    $conn= config('app.conn');
+    $registrantId = session ('user_id');
+
+   $profileFirstName = htmlspecialchars($_POST['profile_first_name']);
+   $profileMiddleName = htmlspecialchars($_POST['profile_middle_name']);
+   $profileLastName = htmlspecialchars($_POST['profile_last_name']);
+   $profileEmailAddress = htmlspecialchars($_POST['profile_email_address']);
+   $profileUsername= htmlspecialchars($_POST['profile_username']);
+   $profileAccountType = htmlspecialchars($_POST['profile_account_type']);
+
+   $letterOnlyPattern ='/^[a-zA-Z ]+$/';
+
+   $responses = [];
+   $responses['error'] = [];
+   
+
+   if (!$profileFirstName) {
+      $error = 'Please enter first name.';
+      array_push($responses['error'],$error);
+   } else {
+       if (!preg_match($letterOnlyPattern,$profileFirstName)) {
+        $error = 'First name is not valid.';
+         array_push($responses['error'],$error);
+        }
+   }
+
+
+   if (!$profileLastName) {
+      $error = 'Please enter last name.';
+         array_push($responses['error'],$error);
+   } else {
+       if (!preg_match($letterOnlyPattern,$profileLastName)) {
+         $error = 'Last name is not valid';
+         array_push($responses['error'],$error);
+        }
+   }
+
+
+   if (!$profileEmailAddress) {
+      $error = 'Please enter email address.';
+      array_push($responses['error'],$error);
+   } else {
+       if (!filter_var($profileEmailAddress, FILTER_VALIDATE_EMAIL)) { 
+       $error = 'Email address is not valid.';
+     array_push($responses['error'],$error);
+      }else {
+         
+            $stmt =$conn->prepare( "SELECT * FROM users WHERE email_address = ?");
+            $stmt->execute([$profileEmailAddress]);
+            $userEmailAddress = $stmt->fetch();
+
+            if ($userEmailAddress) { 
+               $userEmailAddress_Id = $userEmailAddress ['id'];
+
+               if ($registrantId !== $userEmailAddress_Id){
+                  $error = 'Email address is already used.';
+                  array_push($responses['error'],$error);
+               }
+            }
+       
+        
+    }
+   }
+
+
+   if (!$profileUsername) {
+      $error = 'Please enter username.';
+      array_push($responses['error'],$error);
+      } else {
+       $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+       $stmt->execute([$profileUsername]);
+      $userUsername = $stmt->fetch();
+
+    
+
+    if ($userUsername) {
+         $userUsername_Id = $userUsername ['id'];
+
+         if ($registrantId != $userUsername_Id) {
+            $error = 'Username is already used.';
+            array_push($responses['error'],$error);
+         }
+         }
+       
+       
+   }
+
+
+
+      if (!$profileAccountType) {
+      $error = 'Please select type.';
+      array_push($responses['error'],$error);
+      } 
+
+
+     if (!$responses['error']) {
+
+      $stmt=$conn->prepare("UPDATE users
+                            SET 
+                            first_name=?,
+                            middle_name=?,
+                            last_name=?,
+                            email_address=?,
+                           username=?,
+                            type=?
+                            WHERE id = ?");
+        $stmt->execute([$registrantId]);
+         $responses['status'] = 'Successful'; 
+
+     } else {
+         $responses['status'] = 'Unsuccessful'; 
+      }
+   
+      if ($responses) {
+            header('Content-Type: application/json');
+            $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+            echo  $jsonResponses;
+      }
+
+  
+}
+}
+
+public function get_users (Request $request){
+  
+    if ($request->input('get_users_submit')) {
+    
+    $conn= config('app.conn');
+    $registrantId = session('user_id');
+
+    $query = htmlspecialchars($_POST ['query']);  
+    
+    $limit = 5;
+    $currentPage = isset($_POST ['page'])? (int) $_POST ['page'] : 1;
+
+    if ($query) {
+        $currentPage = 1;
+    }
+    $offset = ($currentPage - 1) * $limit;
+
+    
+    
+    $sqlCount = "SELECT COUNT(*) as total FROM users WHERE id !=$registrantId";
+
+    if ($query) {
+        $sqlCount = "SELECT COUNT(*) as total FROM users WHERE name LIKE '%$query%' AND id !=$registrantId";
+    }
+
+
+    $stmt= $conn->prepare($sqlCount);
+    $stmt->execute();
+
+    $rows = $stmt->fetch()['total'];
+    $pages = ceil($rows/$limit);
+
+
+
+    $sqlGet = "SELECT * FROM users WHERE id !=$registrantId ORDER BY name ASC LIMIT  $offset,$limit";
+    
+    if ($query) {
+        $sqlGet = "SELECT * FROM users WHERE name LIKE '%$query%' AND id !=$registrantId ORDER BY name ASC LIMIT $limit";
+    }
+
+    $stmt= $conn->prepare($sqlGet);
+    $stmt->execute();
+    $count= $stmt->rowCount();
+   
+
+
+    echo "<input id='user-rows' value=$rows hidden>";
+    echo "<input id='user-pages' value=$pages hidden>";
+    echo "<input id='user-current-page' value=$currentPage hidden>";
+
+    if ($count>0) { 
+
+    while($users= $stmt->fetch()){ 
+            $userId = $users ['id'];
+            $name = $users ['name'];
+        
+            $attributeId = 'user-'.$userId;
+            $attributeClass = 'list-title';
+
+            if ($userId != $registrantId) {
+                    echo "<strong id='$attributeId' class='$attributeClass'>$name</strong>";
+            echo '<hr>';
+            }
+            
+            
+    }  
+
+
+    } else {
+    echo '<small>No result</small>';
+    
+    }
+
+
+
+            
+    }
+
+
+
 }
         
 }

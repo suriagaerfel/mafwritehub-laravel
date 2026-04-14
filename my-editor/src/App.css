@@ -1,0 +1,76 @@
+.toolbar {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #fafafa;
+}
+
+button {
+    margin-right: 5px;
+}
+
+.ProseMirror {
+    border: 1px solid #ccc;
+    min-height: 300px;
+    padding: 10px;
+}
+
+img,
+video {
+    max-width: 100%;
+    resize: both;
+    overflow: auto;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f9fafb;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.toolbar button {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.toolbar button:hover {
+    background: #f0f0f0;
+}
+
+.ProseMirror {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 300px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+h1 {
+    text-align: center;
+}
+
+img,
+video {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+button.active {
+    background: #333;
+    color: white;
+}

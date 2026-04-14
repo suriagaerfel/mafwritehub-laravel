@@ -3,174 +3,174 @@
 require '../../database.php';
 
 
-if (isset($_POST['get_profile_submit'])) {
-   $sqlProfile = "SELECT * FROM users WHERE id=$registrantId";
-   $sqlProfileResult = mysqli_query($conn,$sqlProfile);
-   $profile= $sqlProfileResult ->fetch_assoc();
+// if (isset($_POST['get_profile_submit'])) {
+//    $sqlProfile = "SELECT * FROM users WHERE id=$registrantId";
+//    $sqlProfileResult = mysqli_query($conn,$sqlProfile);
+//    $profile= $sqlProfileResult ->fetch_assoc();
 
-   if ($profile){
-      $profileDescription = $profile ['description'];
-      $profileFirstName = $profile ['first_name'];
-      $profileMiddleName = $profile ['middle_name'];
-      $profileLastName = $profile ['last_name'];
-      $profileEmailAddress = $profile ['email_address'];
-      $profileUsername = $profile ['username'];
-      $profileAccountType = $profile ['type'];
+//    if ($profile){
+//       $profileDescription = $profile ['description'];
+//       $profileFirstName = $profile ['first_name'];
+//       $profileMiddleName = $profile ['middle_name'];
+//       $profileLastName = $profile ['last_name'];
+//       $profileEmailAddress = $profile ['email_address'];
+//       $profileUsername = $profile ['username'];
+//       $profileAccountType = $profile ['type'];
 
-      $responses = [];
-      $responses ['profile-description'] = $profileDescription;
-      $responses ['profile-first-name'] = $profileFirstName;
-      $responses ['profile-middle-name'] = $profileMiddleName;
-      $responses ['profile-last-name'] = $profileLastName;
-      $responses ['profile-email-address'] = $profileEmailAddress;
-      $responses ['profile-username'] = $profileUsername;
-      $responses ['profile-account-type'] = $profileAccountType;
+//       $responses = [];
+//       $responses ['profile-description'] = $profileDescription;
+//       $responses ['profile-first-name'] = $profileFirstName;
+//       $responses ['profile-middle-name'] = $profileMiddleName;
+//       $responses ['profile-last-name'] = $profileLastName;
+//       $responses ['profile-email-address'] = $profileEmailAddress;
+//       $responses ['profile-username'] = $profileUsername;
+//       $responses ['profile-account-type'] = $profileAccountType;
 
 
-      if ($responses) {
-      header('Content-Type: application/json');
-      $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
-      echo  $jsonResponses;
-      } else {
-         echo '';
-      }
+//       if ($responses) {
+//       header('Content-Type: application/json');
+//       $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+//       echo  $jsonResponses;
+//       } else {
+//          echo '';
+//       }
 
-   }
+//    }
    
-}
+// }
 
-if (isset($_POST['profile_submit'])) {
-   $profileFirstName = htmlspecialchars($_POST['profile_first_name']);
-   $profileMiddleName = htmlspecialchars($_POST['profile_middle_name']);
-   $profileLastName = htmlspecialchars($_POST['profile_last_name']);
-   $profileEmailAddress = htmlspecialchars($_POST['profile_email_address']);
-   $profileUsername= htmlspecialchars($_POST['profile_username']);
-   $profileAccountType = htmlspecialchars($_POST['profile_account_type']);
+// if (isset($_POST['profile_submit'])) {
+//    $profileFirstName = htmlspecialchars($_POST['profile_first_name']);
+//    $profileMiddleName = htmlspecialchars($_POST['profile_middle_name']);
+//    $profileLastName = htmlspecialchars($_POST['profile_last_name']);
+//    $profileEmailAddress = htmlspecialchars($_POST['profile_email_address']);
+//    $profileUsername= htmlspecialchars($_POST['profile_username']);
+//    $profileAccountType = htmlspecialchars($_POST['profile_account_type']);
 
-   $letterOnlyPattern ='/^[a-zA-Z ]+$/';
+//    $letterOnlyPattern ='/^[a-zA-Z ]+$/';
 
-   $responses = [];
-   $responses['error'] = [];
+//    $responses = [];
+//    $responses['error'] = [];
    
 
-   if (!$profileFirstName) {
-      $error = 'Please enter first name.';
-      array_push($responses['error'],$error);
-   } else {
-       if (!preg_match($letterOnlyPattern,$profileFirstName)) {
-        $error = 'First name is not valid.';
-         array_push($responses['error'],$error);
-        }
-   }
+//    if (!$profileFirstName) {
+//       $error = 'Please enter first name.';
+//       array_push($responses['error'],$error);
+//    } else {
+//        if (!preg_match($letterOnlyPattern,$profileFirstName)) {
+//         $error = 'First name is not valid.';
+//          array_push($responses['error'],$error);
+//         }
+//    }
 
 
-   if (!$profileLastName) {
-      $error = 'Please enter last name.';
-         array_push($responses['error'],$error);
-   } else {
-       if (!preg_match($letterOnlyPattern,$profileLastName)) {
-         $error = 'Last name is not valid';
-         array_push($responses['error'],$error);
-        }
-   }
+//    if (!$profileLastName) {
+//       $error = 'Please enter last name.';
+//          array_push($responses['error'],$error);
+//    } else {
+//        if (!preg_match($letterOnlyPattern,$profileLastName)) {
+//          $error = 'Last name is not valid';
+//          array_push($responses['error'],$error);
+//         }
+//    }
 
 
-   if (!$profileEmailAddress) {
-      $error = 'Please enter email address.';
-      array_push($responses['error'],$error);
-   } else {
-       if (!filter_var($profileEmailAddress, FILTER_VALIDATE_EMAIL)) { 
-       $error = 'Email address is not valid.';
-     array_push($responses['error'],$error);
-      }else {
+//    if (!$profileEmailAddress) {
+//       $error = 'Please enter email address.';
+//       array_push($responses['error'],$error);
+//    } else {
+//        if (!filter_var($profileEmailAddress, FILTER_VALIDATE_EMAIL)) { 
+//        $error = 'Email address is not valid.';
+//      array_push($responses['error'],$error);
+//       }else {
          
-            $sqlUserEmailAddress = "SELECT * FROM users WHERE email_address = '$profileEmailAddress'";
-            $sqlUserEmailAddressResult = mysqli_query($conn, $sqlUserEmailAddress);
-            $userEmailAddress = $sqlUserEmailAddressResult->fetch_assoc();
+//             $sqlUserEmailAddress = "SELECT * FROM users WHERE email_address = '$profileEmailAddress'";
+//             $sqlUserEmailAddressResult = mysqli_query($conn, $sqlUserEmailAddress);
+//             $userEmailAddress = $sqlUserEmailAddressResult->fetch_assoc();
 
-            if ($userEmailAddress) { 
-               $userEmailAddress_Id = $userEmailAddress ['id'];
+//             if ($userEmailAddress) { 
+//                $userEmailAddress_Id = $userEmailAddress ['id'];
 
-               if ($registrantId !== $userEmailAddress_Id){
-                  $error = 'Email address is already used.';
-                  array_push($responses['error'],$error);
-               }
-            }
+//                if ($registrantId !== $userEmailAddress_Id){
+//                   $error = 'Email address is already used.';
+//                   array_push($responses['error'],$error);
+//                }
+//             }
        
         
-    }
-   }
+//     }
+//    }
 
 
-   if (!$profileUsername) {
-      $error = 'Please enter username.';
-      array_push($responses['error'],$error);
-      } else {
-       $sqlUserUsername = "SELECT * FROM users WHERE username = '$profileUsername'";
-      $sqlUserUsernameResult = mysqli_query($conn, $sqlUserUsername);
-      $userUsername = $sqlUserUsernameResult->fetch_assoc();
+//    if (!$profileUsername) {
+//       $error = 'Please enter username.';
+//       array_push($responses['error'],$error);
+//       } else {
+//        $sqlUserUsername = "SELECT * FROM users WHERE username = '$profileUsername'";
+//       $sqlUserUsernameResult = mysqli_query($conn, $sqlUserUsername);
+//       $userUsername = $sqlUserUsernameResult->fetch_assoc();
 
     
 
-    if ($userUsername) {
-         $userUsername_Id = $userUsername ['id'];
+//     if ($userUsername) {
+//          $userUsername_Id = $userUsername ['id'];
 
-         if ($registrantId != $userUsername_Id) {
-            $error = 'Username is already used.';
-            array_push($responses['error'],$error);
-         }
-         }
+//          if ($registrantId != $userUsername_Id) {
+//             $error = 'Username is already used.';
+//             array_push($responses['error'],$error);
+//          }
+//          }
        
        
-   }
+//    }
 
 
 
-      if (!$profileAccountType) {
-      $error = 'Please select type.';
-      array_push($responses['error'],$error);
-      } 
+//       if (!$profileAccountType) {
+//       $error = 'Please select type.';
+//       array_push($responses['error'],$error);
+//       } 
 
 
-     if (!$responses['error']) {
+//      if (!$responses['error']) {
 
-      $sqlUpdateProfile = "UPDATE users
-                            SET 
-                            first_name=?,
-                            middle_name=?,
-                            last_name=?,
-                            email_address=?,
-                           username=?,
-                            type=?
-                            WHERE id = '$registrantId'";
+//       $sqlUpdateProfile = "UPDATE users
+//                             SET 
+//                             first_name=?,
+//                             middle_name=?,
+//                             last_name=?,
+//                             email_address=?,
+//                            username=?,
+//                             type=?
+//                             WHERE id = '$registrantId'";
 
-      $stmt = mysqli_stmt_init($conn);
+//       $stmt = mysqli_stmt_init($conn);
 
-      $prepareStmt = mysqli_stmt_prepare($stmt,$sqlUpdateProfile);
+//       $prepareStmt = mysqli_stmt_prepare($stmt,$sqlUpdateProfile);
 
-      if ($prepareStmt) {
-         mysqli_stmt_bind_param($stmt,"ssssss", $profileFirstName,$profileMiddleName,$profileLastName,$profileEmailAddress,$profileUsername,$profileAccountType);
-         mysqli_stmt_execute($stmt);
+//       if ($prepareStmt) {
+//          mysqli_stmt_bind_param($stmt,"ssssss", $profileFirstName,$profileMiddleName,$profileLastName,$profileEmailAddress,$profileUsername,$profileAccountType);
+//          mysqli_stmt_execute($stmt);
 
-         $responses['status'] = 'Successful'; 
-      } 
+//          $responses['status'] = 'Successful'; 
+//       } 
 
 
-     } else {
-         $responses['status'] = 'Unsuccessful'; 
-      }
+//      } else {
+//          $responses['status'] = 'Unsuccessful'; 
+//       }
    
    
    
    
-      if ($responses) {
-            header('Content-Type: application/json');
-            $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
-            echo  $jsonResponses;
-      }
+//       if ($responses) {
+//             header('Content-Type: application/json');
+//             $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+//             echo  $jsonResponses;
+//       }
 
   
-}
+// }
 
 //Update profile picture or cover photo
 if (isset($_POST['upload_image_submit']))  {

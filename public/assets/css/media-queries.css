@@ -1,8 +1,14 @@
 /*Mobile version*/
 @media only screen and (max-width: 767px) {
     #modal-edit-profile .website-modal-content,
-    #modal-add-edit-article .website-modal-content {
-        width: 350px !important;
+    #modal-add-edit-article .website-modal-content,
+    #modal-add-edit-user .website-modal-content {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .other-user-details {
+        flex-direction: column !important;
     }
 }
 

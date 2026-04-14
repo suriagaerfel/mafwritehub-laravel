@@ -1,0 +1,374 @@
+let savedRange = null;
+
+function saveSelection() {
+    const sel = window.getSelection();
+    if (sel.rangeCount > 0) {
+        savedRange = sel.getRangeAt(0);
+    }
+}
+
+function restoreSelection() {
+    if (savedRange) {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(savedRange);
+    }
+}
+
+function format(command, value = null) {
+    document.getElementById("editor").focus();
+    document.execCommand(command, false, value);
+}
+
+function formatBlock(tag) {
+    document.execCommand("formatBlock", false, `<${tag}>`);
+}
+
+// Helper: wrap HTML in a resizable div
+function wrapResizable(html, width) {
+    const w = width?.trim() || "100%";
+    return `<div contenteditable="false" class="resizable" style="max-width:${w};">${html}</div>`;
+}
+
+function insertTable() {
+    const rows = prompt("Number of rows:", 2);
+    const cols = prompt("Number of columns:", 2);
+    if (!rows || !cols) return;
+
+    let table =
+        "<table border='1' style='border-collapse:collapse;width:100%;'>";
+    for (let i = 0; i < rows; i++) {
+        table += "<tr>";
+        for (let j = 0; j < cols; j++) table += "<td>&nbsp;</td>";
+        table += "</tr>";
+    }
+    table += "</table>";
+
+    const width = prompt("Table width (e.g. 600px, 80%):", "100%");
+    const wrappedTable = wrapResizable(table, width);
+
+    const editor = document.getElementById("editor");
+    editor.focus();
+    restoreSelection();
+    pasteHtmlAtCaret(wrappedTable);
+}
+
+function insertImage() {
+    const editor = document.getElementById("editor");
+    editor.focus();
+    saveSelection();
+
+    const modalHtml = `
+    <div class="modal-row">
+      <label class="modal-radio">
+        <input type="radio" name="imgType" value="upload" checked> Upload from computer
+      </label>
+      <input id="imgFile" type="file" accept="image/*" onchange="handleImgFileChange(event)" hidden>
+      <button onclick="document.getElementById('imgFile').click()">Choose File</button>
+    </div>
+    <div class="modal-row">
+      <label class="modal-radio">
+        <input type="radio" name="imgType" value="url"> Enter URL
+      </label>
+      <input type="text" id="imgUrl" class="modal-input" placeholder="https://example.com/image.jpg">
+    </div>
+    <div class="modal-row">
+      <label>Width (e.g. 300px, 70%)</label>
+      <input type="text" id="imgWidth" class="modal-input" placeholder="100%">
+    </div>
+  `;
+    showModal("Insert Image", modalHtml, () => {
+        const upload = document.querySelector(
+            "input[name='imgType'][value='upload']:checked",
+        );
+        const url = document.querySelector(
+            "input[name='imgType'][value='url']:checked",
+        );
+        const file = document.getElementById("imgFile").files[0];
+        const textUrl = document.getElementById("imgUrl").value.trim();
+        const width =
+            document.getElementById("imgWidth").value.trim() || "100%";
+
+        const buildImg = (src) => {
+            return `<img src="${src}" style="max-width:100%;display:block;margin:6px 0;">`;
+        };
+
+        if (upload && file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const wrapped = wrapResizable(buildImg(e.target.result), width);
+                const editor = document.getElementById("editor");
+                editor.focus();
+                restoreSelection();
+                pasteHtmlAtCaret(wrapped);
+            };
+            reader.readAsDataURL(file);
+        } else if (url && textUrl && textUrl.startsWith("http")) {
+            const editor = document.getElementById("editor");
+            editor.focus();
+            restoreSelection();
+
+            const wrapped = wrapResizable(buildImg(textUrl), width);
+            if (document.queryCommandSupported("insertHTML")) {
+                document.execCommand("insertHTML", false, wrapped);
+            } else {
+                pasteHtmlAtCaret(wrapped);
+            }
+        } else {
+            alert("Please select a file or enter a valid URL.");
+        }
+    });
+}
+
+function handleImgFileChange(e) {
+    const file = e.target.files[0];
+    if (file) {
+        document.querySelector(
+            "input[name='imgType'][value='upload']",
+        ).checked = true;
+    }
+}
+
+function insertVideo() {
+    const editor = document.getElementById("editor");
+    editor.focus();
+    saveSelection();
+
+    const modalHtml = `
+    <div class="modal-row">
+      <label class="modal-radio">
+        <input type="radio" name="videoType" value="upload" checked> Upload MP4
+      </label>
+      <input id="videoFile" type="file" accept="video/mp4" onchange="handleVideoFileChange(event)" hidden>
+      <button onclick="document.getElementById('videoFile').click()">Choose File</button>
+    </div>
+    <div class="modal-row">
+      <label class="modal-radio">
+        <input type="radio" name="videoType" value="url"> Enter MP4 URL
+      </label>
+      <input type="text" id="videoUrl" class="modal-input" placeholder="https://example.com/video.mp4">
+    </div>
+    <div class="modal-row">
+      <label class="modal-radio">
+        <input type="radio" name="videoType" value="youtube"> YouTube URL
+      </label>
+      <input type="text" id="youtubeUrl" class="modal-input" placeholder="https://www.youtube.com/watch?v=...">
+    </div>
+    <div class="modal-row">
+      <label>Width (e.g. 100%, 400px)</label>
+      <input type="text" id="videoWidth" class="modal-input" placeholder="100%">
+    </div>
+  `;
+    showModal("Insert Video", modalHtml, () => {
+        const upload = document.querySelector(
+            "input[name='videoType'][value='upload']:checked",
+        );
+        const mp4Url = document.querySelector(
+            "input[name='videoType'][value='url']:checked",
+        );
+        const youtubeChoice = document.querySelector(
+            "input[name='videoType'][value='youtube']:checked",
+        );
+        const file = document.getElementById("videoFile").files[0];
+        const mp4TextUrl = document.getElementById("videoUrl").value.trim();
+        const youtubeRaw = document.getElementById("youtubeUrl").value.trim();
+        const width =
+            document.getElementById("videoWidth").value.trim() || "100%";
+
+        const buildWrapped = (inner) => wrapResizable(inner, width);
+
+        if (upload && file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const inner = `<div style="text-align:center;"><video controls style="max-width:100%;height:auto;"><source src="${e.target.result}" type="video/mp4"></video></div>`;
+                const wrapped = buildWrapped(inner);
+                const editor = document.getElementById("editor");
+                editor.focus();
+                restoreSelection();
+                pasteHtmlAtCaret(wrapped);
+            };
+            reader.readAsDataURL(file);
+        } else if (
+            mp4Url &&
+            mp4TextUrl &&
+            mp4TextUrl.startsWith("http") &&
+            mp4TextUrl.includes(".mp4")
+        ) {
+            const editor = document.getElementById("editor");
+            editor.focus();
+            restoreSelection();
+
+            const inner = `<div style="text-align:center;"><video controls style="max-width:100%;height:auto;"><source src="${mp4TextUrl}" type="video/mp4"></video></div>`;
+            const wrapped = buildWrapped(inner);
+            if (document.queryCommandSupported("insertHTML")) {
+                document.execCommand("insertHTML", false, wrapped);
+            } else {
+                pasteHtmlAtCaret(wrapped);
+            }
+        } else if (
+            youtubeChoice &&
+            youtubeRaw &&
+            youtubeRaw.trim().length > 0
+        ) {
+            const editor = document.getElementById("editor");
+            editor.focus();
+            restoreSelection();
+
+            const id = extractYouTubeId(youtubeRaw);
+            if (!id) {
+                alert("Invalid YouTube URL.");
+                return;
+            }
+
+            const inner = `<div style="text-align:center;"><iframe width="560" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe></div>`;
+            const wrapped = buildWrapped(inner);
+            if (document.queryCommandSupported("insertHTML")) {
+                document.execCommand("insertHTML", false, wrapped);
+            } else {
+                pasteHtmlAtCaret(wrapped);
+            }
+        } else {
+            alert("Please select a file, enter an MP4 URL, or a YouTube URL.");
+        }
+    });
+}
+
+function extractYouTubeId(url) {
+    const regExp =
+        /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+}
+
+function handleVideoFileChange(e) {
+    const file = e.target.files[0];
+    if (file) {
+        document.querySelector(
+            "input[name='videoType'][value='upload']",
+        ).checked = true;
+    }
+}
+
+function uploadFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const imgHTML = `<img src="${e.target.result}" style="max-width:100%;display:block;margin:6px 0;">`;
+        const editor = document.getElementById("editor");
+        editor.focus();
+        restoreSelection();
+        pasteHtmlAtCaret(imgHTML);
+    };
+    reader.readAsDataURL(file);
+}
+
+function pasteHtmlAtCaret(html) {
+    const editor = document.getElementById("editor");
+    editor.focus();
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    const el = document.createElement("div");
+    el.innerHTML = html;
+    const frag = document.createDocumentFragment();
+    while (el.firstChild) frag.appendChild(el.firstChild);
+
+    range.insertNode(frag);
+
+    range.setStartAfter(frag.lastChild || frag.firstChild || frag);
+    sel.removeAllRanges();
+    sel.addRange(range);
+}
+
+function showModal(title, html, onConfirm) {
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalBody").innerHTML = html;
+    window.currentModalConfirm = onConfirm;
+    document.getElementById("modal").style.display = "flex";
+    document.getElementById("editor").focus();
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+    window.currentModalConfirm = null;
+}
+
+function confirmModal() {
+    if (window.currentModalConfirm) {
+        window.currentModalConfirm();
+    }
+    closeModal();
+}
+
+function insertLink() {
+    const editor = document.getElementById("editor");
+    editor.focus();
+    saveSelection();
+
+    const selection = window.getSelection();
+    const text = selection.toString().trim();
+
+    const modalHtml = `
+    <div class="modal-row">
+      <label>Link text</label>
+      <input type="text" id="linkText" class="modal-input" value="${text || ""}">
+    </div>
+    <div class="modal-row">
+      <label>URL</label>
+      <input type="text" id="linkUrl" class="modal-input" value="${text || "https://"}" placeholder="https://">
+    </div>
+  `;
+    showModal("Insert Link", modalHtml, () => {
+        const txt = document.getElementById("linkText").value.trim();
+        const url = document.getElementById("linkUrl").value.trim();
+
+        if (!url || !url.startsWith("http")) {
+            alert("Please enter a valid URL.");
+            return;
+        }
+
+        const linkText = txt || url;
+        const linkHTML = `<a href="${url}" target="_blank">${linkText}</a>`;
+
+        const editor = document.getElementById("editor");
+        editor.focus();
+        restoreSelection();
+        pasteHtmlAtCaret(linkHTML);
+    });
+}
+
+document.getElementById("editor").addEventListener("click", function (e) {
+    const link = e.target.closest("a");
+    if (!link) return;
+
+    e.preventDefault();
+    const text = link.textContent;
+    const url = link.href;
+
+    const modalHtml = `
+    <div class="modal-row">
+      <label>Link text</label>
+      <input type="text" id="linkText" class="modal-input" value="${text}">
+    </div>
+    <div class="modal-row">
+      <label>URL</label>
+      <input type="text" id="linkUrl" class="modal-input" value="${url}" placeholder="https://">
+    </div>
+  `;
+
+    showModal("Edit Link", modalHtml, () => {
+        const txt = document.getElementById("linkText").value.trim();
+        const u = document.getElementById("linkUrl").value.trim();
+
+        if (!u || !u.startsWith("http")) {
+            alert("Please enter a valid URL.");
+            return;
+        }
+
+        link.textContent = txt || u;
+        link.href = u;
+    });
+});

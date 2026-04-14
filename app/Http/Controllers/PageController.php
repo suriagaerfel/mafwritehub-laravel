@@ -171,4 +171,11 @@ class PageController extends Controller
     }
 
 
+    public function add_article (){
+        $pageName = 'Add Article';
+        
+        return view('article-edit', compact('pageName'));
+    }
+
+
 }
