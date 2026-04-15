@@ -14,7 +14,7 @@
             <a href="<?php echo $publicFolder;?>"><img src="<?php echo $publicFolder.'/assets/images/home.png'?>" class="icon"></a>
             
             <?php if ($type == 'Owner') {?>
-                <a href=""><img src="<?php echo $publicFolder.'/assets/images/settings.png'?>" class="icon"></a>
+                <span id="settings"><img src="<?php echo $publicFolder.'/assets/images/settings.png'?>" class="icon"></span>
             <?php } ?>
 
                 <a href=""><img src="<?php echo $publicFolder.'/assets/images/logout.png'?>" class="icon" id="dashboard-logout-button"></a>

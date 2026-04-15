@@ -4,7 +4,7 @@
     @include ('components/socials')
 
     <?php if (!$loggedIn){?>
-    <span class="login-button" style="cursor:pointer;color:white;"><i class="bi bi-box-arrow-in-left"></i></span>
+    <span class="login-button link-tag-button" style="cursor:pointer;color:white;" >Login</span>
     <?php } ?>
 
     <?php if ($loggedIn){?>

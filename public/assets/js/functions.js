@@ -483,6 +483,7 @@ function initializeArticlePanel() {
                     $("#article-unpublish-button").hide();
                     $("#article-delete-button").show();
                     $("#article-image-button").show();
+                    $("#editor").show();
                 }
 
                 if (responses["article-status"] == "Published") {
@@ -491,6 +492,7 @@ function initializeArticlePanel() {
                     $("#article-unpublish-button").show();
                     $("#article-delete-button").hide();
                     $("#article-image-button").hide();
+                    $("#editor").hide();
                 }
 
                 $("#article-view-button").show();
@@ -505,6 +507,8 @@ function initializeArticlePanel() {
     }
 
     if (article_mode == "new") {
+        $("#editor").show();
+
         $("#article-delete-button").hide();
         $("#article-publish-button").hide();
         $("#article-unpublish-button").hide();
@@ -1423,6 +1427,9 @@ function toggleMenuContentMobile() {
     $("#modal-menu").toggle();
 }
 
+function showSettingsModal() {
+    $("#modal-settings").show();
+}
 function initializeSummernote() {
     $("#summernote").summernote();
 

@@ -462,6 +462,33 @@
 
 
 
+      <?php //-----------------FOR SETTINGS----------------------------- ?>
+
+    <div class="modal website-modal website-modal-wrapper" id="modal-settings">
+        <div class="website-modal-content" style="height:100vh;width:100%;margin-top:0px;">
+            <div class="close-modal-container" style="justify-content:space-between;">
+                <h2>Settings</h2>
+                <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
+            </div>
+            <div>
+                <span class="link-tag-button">Add/Remove Category</span>
+                <span class="link-tag-button">Add/Remove Tag</span>
+                <span class="link-tag-button">Update Theme</span>
+                <span class="link-tag-button">Update Ad Link</span>
+                <span class="link-tag-button">Update Social Links</span>
+                <span class="link-tag-button">Backup Data</span>
+            </div>
+
+            
+                
+        </div>
+
+    </div>
+
+
+
+
+
 
 
 

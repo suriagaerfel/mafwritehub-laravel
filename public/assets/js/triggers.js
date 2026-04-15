@@ -307,5 +307,9 @@ $(document).ready(function () {
         toggleMenuContentMobile();
     });
 
+    $("#settings").click(function () {
+        showSettingsModal();
+    });
+
     initializeSummernote();
 });
