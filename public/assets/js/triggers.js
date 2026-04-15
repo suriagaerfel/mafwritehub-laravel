@@ -8,9 +8,11 @@ $(document).ready(function () {
     if (page_name != "Dashboard") {
         getFeaturedCategories();
 
-        if (article_category || article_tag || article_date || article_writer) {
+        if (article_slug) {
             getFeaturedArticles();
         }
+
+        getFeaturedArticles();
     }
 
     if (page_name == "Dashboard") {
@@ -123,7 +125,7 @@ $(document).ready(function () {
     });
 
     $(document).on("input", "#article-version", function () {
-        getVersionContent();
+        getVersionBody();
     });
 
     $("#article-image-button").click(function () {
@@ -191,7 +193,7 @@ $(document).ready(function () {
         updateArticleStatus(action);
     });
 
-    $(".note-editable,#article-title,#article-category,#article-topic").on(
+    $("#editor,#article-title,#article-category,#article-topic").on(
         "input",
         function () {
             var storage_type = "session";
@@ -200,6 +202,7 @@ $(document).ready(function () {
     );
 
     $("#article-save-button").click(function () {
+        alert("save");
         var storage_type = "db";
         saveArticle(storage_type);
     });
@@ -236,8 +239,8 @@ $(document).ready(function () {
     });
 
     $("#user-add-update-submit-button").click(function () {
-        var add_update_action = $(this).text();
-        submitUser(add_update_action);
+        var save_action = $(this).text();
+        saveUser(save_action);
     });
 
     $("#user-delete-button").click(function () {
@@ -290,6 +293,18 @@ $(document).ready(function () {
 
     $(".close").click(function () {
         $(".modal").hide();
+    });
+
+    $("#search-article-button").click(function () {
+        showSearchArticlesModal();
+    });
+
+    $("#close-modal-search-articles").click(function () {
+        hideSearchArticlesModal();
+    });
+
+    $("#menu").click(function () {
+        toggleMenuContentMobile();
     });
 
     initializeSummernote();

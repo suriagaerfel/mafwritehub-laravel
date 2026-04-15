@@ -33,7 +33,7 @@ return new class extends Migration
 
             $table->dateTime('published')->nullable();
 
-            $table->integer('content_version')->default(1);
+            $table->integer('version')->default(1);
             $table->string('status', 64)->default('Draft');
 
             $table->longText('comments')->nullable();

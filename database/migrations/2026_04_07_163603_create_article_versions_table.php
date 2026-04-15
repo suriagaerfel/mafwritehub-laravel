@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('article_content_versions', function (Blueprint $table) {
+        Schema::create('article_versions', function (Blueprint $table) {
         
             $table->increments('id');
             $table->timestamp('timestamp')->useCurrent();
 
             $table->integer('article_id');
-            $table->integer('content_version');
+            $table->integer('version');
 
-            $table->longText('version_content');
+            $table->longText('version_body');
         });
     }
 

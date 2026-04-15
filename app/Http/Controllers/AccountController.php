@@ -260,18 +260,27 @@ class AccountController extends Controller
             $stmt->execute([$token, $tokenExpiration, $verifyingId]);
 
 
-            $stmt = $conn->prepare("SELECT name FROM users WHERE id= ?");
+            $stmt = $conn->prepare("SELECT * FROM users WHERE id= ?");
             $stmt->execute([$verifyingId]);
-            $user_name=$stmt->fetchColumn();
+            $user=$stmt->fetch();
+
+            if ($user){
+              $user_name = $user ['name'];
+              $user_username = $user ['username'];
+            }
 
             $mailerSubject = 'Verify Your Account';
 
             $mailerBody = <<<END
                 
-                <p>Hi, $user_name!</p 
-                <p>Someone is attempting to login to your account.</p>
-            
-                <p>If it's you, kindly click <a href='$publicFolder/verify/$token+$verifyingId'> here</a> to logout so you can login.</p>
+                <p>You have been added as Guest Writer to Maf Write Hub, $user_name!</p 
+                      
+                <p>To start using your account, please verify it now by clicking <a href='$publicFolder/verify/$token+$verifyingId'> here</a> and you will be able to login afterwards.</p>
+
+                <p><strong>Login Details:</strong></p>
+                <p>Email Address: $verifyingEmail</p>
+                 <p>Username: $user_username</p>
+                <p>Password: $user_username</p>
 
                 <p>You can also copy the link below and paste it on your browser's url bar if the previous method does not work:</p>
 

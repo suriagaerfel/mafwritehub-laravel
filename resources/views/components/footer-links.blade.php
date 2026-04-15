@@ -3,7 +3,7 @@
 
 
 
-  <div class="footer-page-links-container" style="display: flex; flex-direction:row; text-align:center; gap:20px;justify-content:center;">
+  <div id="footer-links-container" style="display: flex; flex-direction:row; text-align:center; gap:20px;justify-content:center;">
     <div>
       <a href="<?php echo $publicFolder;?>"><small>Maf Write Hub</small></a>
     </div>
@@ -17,7 +17,7 @@
     </div>
 
 
-      @include('components/footer-socials')
+      
     </div>
   </div>
 

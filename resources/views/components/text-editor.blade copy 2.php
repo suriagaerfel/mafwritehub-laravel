@@ -44,19 +44,16 @@
   <button onclick="insertLink()"><i class="bi bi-link"></i></button>
   <button onclick="insertImage()"><i class="bi bi-card-image"></i></button>
   <button onclick="insertVideo()"><i class="bi bi-play-btn-fill"></i></button>
-  <div id='article-toolbar-extra-buttons-container' style="display: none;">
-    <button onclick="showArticleMetaModal()">Details</button>
-    <button id="article-save-button">Save</button>
-    <button id="article-publish-button">Publish</button>
-    <button id="article-unpublish-button">Unpublish</button>
-    <button id="article-delete-button">Delete</button>
-    <button id="article-image-button">Image</button>
-    <button id="article-view-button">View</button>
-    <input type="file" id="fileInput" onchange="uploadFile(event)" hidden>
-  </div>
-
+  <button>Details</i></button>
+  <button id="article-save-button">Save</button>
+  <button id="article-publish-button">Publish</button>
+  <button id="article-unpublish-button">Unpublish</button>
+  <button id="article-delete-button">Delete</button>
+  <button id="article-image-button">Image</button>
+  <button id="article-view-button">View</button>
+  <input type="file" id="fileInput" onchange="uploadFile(event)" hidden>
 </div>
 
-<div id="editor" contenteditable="true" style="border:none;outline:none; overflow:scroll; scrollbar-width:none; scrollbar-height:none;"></div>
+<div id="editor" contenteditable="true" style="border:none;outline:none;"></div>
 
 

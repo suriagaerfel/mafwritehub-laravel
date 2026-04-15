@@ -408,11 +408,3 @@ document.getElementById("editor").addEventListener("click", function (e) {
         link.href = u;
     });
 });
-
-function showArticleMetaModal() {
-    $("#modal-article-meta").show();
-}
-
-function closeArticleMetaModal() {
-    $("#modal-article-meta").hide();
-}

@@ -19,13 +19,8 @@
     <link rel="stylesheet" href="{{asset('assets/bootstrap/css/bootstrap.min.css')}}">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
      <script src="{{asset('assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-
-    
-
-    <!-- include summernote css/js -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" >
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 
     <!-- include font awesome css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -38,8 +33,6 @@
     <link rel="stylesheet" href="<?php echo $publicFolder.'/assets/css/media-queries.css'; ?>">
 
     <link rel="stylesheet" href="<?php echo $publicFolder.'/assets/custom-text-editor/style.css'; ?>">
-
-
     
 
 </head>

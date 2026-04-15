@@ -207,15 +207,15 @@ public function get_article (Request $request){
             $articleTitle = $article ['title'];
             $articleCategory = $article ['category'];
             $articleTopic = $article ['topic'];
-            $articleContentVersion = $article ['content_version'];
+            $articleVersion = $article ['version'];
 
 
-            $stmt= $conn->prepare("SELECT * FROM article_content_versions WHERE article_id = ? AND content_version=?");
-            $stmt->execute([$articleId,$articleContentVersion]);
+            $stmt= $conn->prepare("SELECT * FROM article_versions WHERE article_id = ? AND version=?");
+            $stmt->execute([$articleId,$articleVersion]);
             $versionRecords= $stmt->fetch();
            
             if ($versionRecords) {
-                    $articleContent = $versionRecords ['version_content'];
+                    $articleBody= $versionRecords ['version_body'];
             }
            
             $articleStatus = $article ['status'];
@@ -224,8 +224,8 @@ public function get_article (Request $request){
             $responses ['article-title'] = $articleTitle;
             $responses ['article-category'] = $articleCategory;
             $responses ['article-topic'] = $articleTopic;
-            $responses ['article-content-version'] = $articleContentVersion;
-            $responses ['article-content'] = $articleContent;
+            $responses ['article-version'] = $articleVersion;
+            $responses ['article-body'] = $articleBody;
             $responses ['article-status'] = $articleStatus;
             
         } else {
@@ -242,31 +242,51 @@ public function get_article (Request $request){
 }
 
 
-public function get_version_content (Request $request){
-    if ($request->input('get_version_content_submit')){
+public function get_version_body (Request $request){
+    if ($request->input('get_version_body_submit')){
 
         $conn= config('app.conn');
 
-        $articleContentVersion = htmlspecialchars($_POST['article_content_version']);
+        $articleVersion = htmlspecialchars($_POST['article_version']);
         $articleId = htmlspecialchars($_POST['article_id']);
 
-        $sqlArticleVersion = "SELECT * FROM article_content_versions WHERE article_id = $articleId AND content_version = $articleContentVersion";
-        $sqlArticleVersionResult = mysqli_query($conn,$sqlArticleVersion);
-        $articleVersion = $sqlArticleVersionResult->fetch_assoc();
 
 
-        $stmt= $conn->prepare("SELECT * FROM article_content_versions WHERE article_id = ? AND content_version = ?");
-        $stmt->execute([$articleId,$articleContentVersion]);
+        $stmt= $conn->prepare("SELECT * FROM article_versions WHERE article_id = ? AND version = ?");
+        $stmt->execute([$articleId,$articleVersion]);
         $articleVersion = $stmt->fetch();
 
         if ($articleVersion) {
-            $versionContent = $articleVersion ['version_content'];
+            $versionBody = $articleVersion ['version_body'];
         } else {
-            $versionContent = '';
+            $versionBody = '';
         }
 
-        echo $versionContent;
+        echo $versionBody;
 
+}
+}
+
+
+public function get_article_image (Request $request){
+    if ($request->input('get_article_image_submit')) {
+    $conn= config('app.conn');
+
+   $articleId= htmlspecialchars(($_POST['article_id']));
+
+   $stmt = $conn->prepare("SELECT * FROM articles WHERE id = ? LIMIT 1");
+   $stmt->execute([$articleId]);
+   $article = $stmt->fetch();
+
+   if ($article) {
+      $articleImage = $article ['image'];
+
+      echo $articleImage;
+   } else {
+      echo '';
+   }
+
+   
 }
 }
 
@@ -503,21 +523,21 @@ public function delete_topic (Request $request){
 }
 
 
-public function get_article_content_versions (Request $request){
-    if ($request->input('get_article_content_versions_submit')) {
+public function get_article_versions (Request $request){
+    if ($request->input('get_article_versions_submit')) {
         $conn=  config('app.conn');
 
         $articleId = htmlspecialchars($_POST['article_id']);
 
    if ($articleId) {
    
-      $stmt= $conn->prepare("SELECT * FROM article_content_versions WHERE article_id = ? ORDER BY id DESC");
+      $stmt= $conn->prepare("SELECT * FROM article_versions WHERE article_id = ? ORDER BY id DESC");
       $stmt->execute([$articleId]);
       $count = $stmt->rowCount();
       
       if ($count>0) {
          while($articleVersions =$stmt->fetch()) {
-            $articleVersion = $articleVersions ['content_version'];
+            $articleVersion = $articleVersions ['version'];
             echo "<option value=$articleVersion>Content V$articleVersion</option>";
          }
       } 
@@ -547,11 +567,11 @@ public function update_article_status (Request $request){
             if ($articleRecords) {
                 $articlePubDate = $articleRecords ['published'];
 
-                if ($articlePubDate != '0000-00-00 00:00:00') {
+                if ($articlePubDate != null) {
                     $articlePubDate = $articlePubDate;
                 }
 
-                if ($articlePubDate == '0000-00-00 00:00:00') {
+                if ($articlePubDate == null) {
                     $articlePubDate = date("Y-m-d H:i:s", $currentTime);
                 }
             }
@@ -581,9 +601,9 @@ public function update_article_status (Request $request){
 }
 
 
-public function add_article (Request $request){
+public function save_article (Request $request){
 
-    if ($request->input('article_submit')){
+    if ($request->input('save_article_submit')){
     
     $conn= config('app.conn');
     $userId = session('user_id');
@@ -597,9 +617,9 @@ public function add_article (Request $request){
    $articleCategory = htmlspecialchars($_POST['article_category']);
    $articleTopic = htmlspecialchars($_POST['article_topic']);
 
-   $articleContentVersion = htmlspecialchars($_POST['article_content_version']);
+   $articleVersion = htmlspecialchars($_POST['article_version']);
    
-   $articleContent = $_POST['article_content'];
+   $articleBody = $_POST['article_body'];
 
     $responses=[];
       $responses['error'] = [];
@@ -609,16 +629,16 @@ public function add_article (Request $request){
          $_SESSION ["article-{$articleId}-title"] = $articleTitle;
          $_SESSION ["article-{$articleId}-category"] = $articleCategory;
          $_SESSION ["article-{$articleId}-topic"] = $articleTopic;
-         $_SESSION ["article-{$articleId}-content-version"] = $articleContentVersion;
-         $_SESSION ["article-{$articleId}-content"] = $articleContent;
+         $_SESSION ["article-{$articleId}-version"] = $articleVersion;
+         $_SESSION ["article-{$articleId}-body"] = $articleBody;
       }
 
        if(!$articleId){
          $_SESSION ["article-title"] = $articleTitle;
          $_SESSION ["article-category"] = $articleCategory;
-         $_SESSION ["article--topic"] = $articleTopic;
-         $_SESSION ["article-content-version"] = $articleContentVersion;
-         $_SESSION ["article-content"] = $articleContent;
+         $_SESSION ["article-topic"] = $articleTopic;
+         $_SESSION ["article-version"] = $articleVersion;
+         $_SESSION ["article-body"] = $articleBody;
       }
    }
 
@@ -677,7 +697,7 @@ public function add_article (Request $request){
           
 
             if ($articleRecord){
-            $latestVersion = (int) $articleRecord['content_version'];
+            $latestVersion = (int) $articleRecord['version'];
             $newVersion =  $latestVersion + 1;
 
             } 
@@ -686,9 +706,9 @@ public function add_article (Request $request){
                                     SET title=?,
                                        category=?,
                                        topic=?,
-                                       content_version=?
+                                       version=?
                                        WHERE id = ?");
-                $stmt->execute([$articleTitle,$articleCategory,$articleTopic,$articleId]);
+                $stmt->execute([$articleTitle,$articleCategory,$articleTopic,$newVersion,$articleId]);
 
                 $update_articleId = $articleId;
              
@@ -697,7 +717,7 @@ public function add_article (Request $request){
             if(!$articleId){
                   $newVersion = 1;
 
-                  $stmt = $conn->prepare("INSERT INTO articles (title,slug,category,topic,writer_id,content_version) VALUES(?,?,?,?,?,?)");
+                  $stmt = $conn->prepare("INSERT INTO articles (title,slug,category,topic,writer_id,version) VALUES(?,?,?,?,?,?)");
                   $stmt->execute([$articleTitle,$slug,$articleCategory,$articleTopic,$userId,$newVersion]);
 
                    $update_articleId =  $conn->lastInsertId();
@@ -705,8 +725,8 @@ public function add_article (Request $request){
             }
 
 
-            $stmt = $conn->prepare("INSERT INTO article_content_versions (article_id,content_version,version_content) VALUES(?,?,?)");
-            $stmt->execute([$update_articleId,$newVersion,$articleContent]);
+            $stmt = $conn->prepare("INSERT INTO article_versions (article_id,version,version_body) VALUES(?,?,?)");
+            $stmt->execute([$update_articleId,$newVersion,$articleBody]);
 
          
             $responses ['status'] = 'Successful';
@@ -974,6 +994,265 @@ public function get_users (Request $request){
 
 
 
+}
+
+
+public function get_user(Request $request){
+    if ($request->input('get_user_submit')){
+        $conn= config('app.conn');
+    $userId = htmlspecialchars($_POST['user_id']);
+
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
+
+    $responses = [];
+
+    if ($user) {
+        $responses ['user-first-name'] = $user['first_name'];
+        $responses ['user-middle-name'] = $user['middle_name'];
+        $responses ['user-last-name'] = $user['last_name'];
+        $responses ['user-name'] = $user['name'];
+        $responses ['user-email-address'] = $user['email_address'];
+        $responses ['user-username'] = $user['username'];
+        $responses ['user-type'] = $user['type'];
+        $responses ['user-status'] = $user['status'];
+    }
+
+
+    if ($responses) {
+        header('Content-Type: application/json');
+        $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+        echo  $jsonResponses;
+    } else {
+        echo '';
+    }
+    }
+}
+
+
+public function save_user (Request $request){
+    if($request->input('save_user_submit')){
+
+        $conn= config('app.conn');
+
+        $userId = htmlspecialchars($_POST['user_id']);
+        $firstName = htmlspecialchars($_POST['user_first_name']);
+        $lastName = htmlspecialchars($_POST['user_last_name']);
+
+        $name=trim($firstName.' '.$lastName);
+        $emailAddress = htmlspecialchars($_POST['user_email_address']);
+        $username = htmlspecialchars($_POST['user_username']);
+        $type = htmlspecialchars($_POST['user_type']);
+
+        $generatedPassword = password_hash($username, PASSWORD_DEFAULT);
+
+        $status = htmlspecialchars($_POST['user_status']);
+
+        $action = htmlspecialchars($_POST['save_action']);
+
+        $letterOnlyPattern ='/^[a-zA-Z ]+$/';
+        $responses = [];
+        $responses ['error'] = [];
+        
+
+
+
+        if (!$firstName) {
+            $error = 'Please enter first name.';
+            array_push($responses ['error'],$error);
+        } else {
+            if (!preg_match($letterOnlyPattern,$firstName)) {
+                $error = 'First name is not valid.';
+                array_push($responses ['error'],$error);
+                }
+        }
+
+
+        if (!$lastName) {
+            $error= 'Please enter last name.';
+            array_push($responses ['error'],$error);
+        } else {
+            if (!preg_match($letterOnlyPattern,$lastName)) {
+            $error = 'Last name is not valid.';
+                array_push($responses ['error'],$error);
+                }
+        }
+
+
+        if (!$emailAddress) {
+            $error = 'Please enter email address.';
+            array_push($responses ['error'],$error);
+        } else {
+            if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) { 
+            $error = 'Email address is not valid.';
+            array_push($responses ['error'],$error);
+            }else {
+                
+            if ($action=='Add') {
+                    $stmt = $conn->prepare("SELECT * FROM users WHERE email_address = ?");
+                    $stmt->execute([$emailAddress]);
+                    $rowCountEmail = $stmt->rowCount();
+
+                    if ($rowCountEmail>0) { 
+                    $error = 'Email address is already added.';
+                    array_push($responses ['error'],$error);
+                    }
+            }
+                
+            }
+        }
+
+
+        if (!$username) {
+            $error = 'Please enter username.';
+            array_push($responses ['error'],$error);
+            } else {
+            if ($action=='Add') {
+                $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+                $stmt->execute([$username]);
+                $rowCountUsername = $stmt->rowCount();
+
+                if ($rowCountUsername>0) {
+                        $error = 'Username is already added.';
+                    array_push($responses ['error'],$error);
+                    
+                }
+            }
+            
+        }
+
+
+
+
+            if (!$type) {
+            $error = 'Please select type.';
+            array_push($responses ['error'],$error);
+            } 
+
+
+            if (!$status) {
+            $error = 'Please select status.';
+            array_push($responses ['error'],$error);
+            } 
+        
+
+
+
+
+
+        
+
+
+            if (!$responses['error']) {
+
+            if ($action == 'Add') {
+
+                $stmt = $conn->prepare("INSERT INTO users (first_name,last_name,name,email_address,username,password,type,status) VALUES (?,?,?,?,?,?,?,?)");
+                $stmt->execute([$firstName,$lastName,$name,$emailAddress,$username,$generatedPassword,$type,$status]);
+               
+                $newUserId = $conn->lastInsertId();;
+
+                $responses ['status'] = 'Successful';
+                $responses ['user-id'] = $newUserId;
+                $responses ['user-email-address'] = $emailAddress;
+
+            }
+
+
+            if ($action == 'Update') {
+
+                $stmt= $conn->prepare("UPDATE users
+                                    SET 
+                                    type=?,
+                                    status = ?
+                                    WHERE id = ?");
+
+                $stmt->execute([$type,$status,$userId]);
+      
+                $responses ['status'] = 'Successful';
+                
+            }
+
+            
+        } else {
+                $responses['status'] = 'Unsuccessful'; 
+        }
+        
+        
+        
+        
+            if ($responses) {
+                    header('Content-Type: application/json');
+                    $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+                    echo  $jsonResponses;
+            }
+            
+
+
+        }
+
+}
+
+
+public function delete (Request $request){
+    if ($request->input('delete_submit')) {
+        $conn=config('app.conn');
+
+        $deleteId = htmlspecialchars($_POST['id']);
+        $deleteType = htmlspecialchars($_POST['type']);
+
+
+        if ($deleteType=='user') {
+            $table = 'users';
+            $idColumn = 'id';
+            $imageCol = 'profile_picture_link';
+        }
+
+        if ($deleteType=='article') {
+            $table = 'articles';
+            $idColumn = 'id';
+            $imageCol = 'image';
+        }
+        
+
+        $stmt = $conn->prepare("SELECT $imageCol FROM $table WHERE $idColumn=?");
+        $stmt->execute([$deleteId]);
+        $imageLink= $stmt->fetchColumn();
+
+        if ($imageLink) {
+            if ($deleteType=='user'){
+                unlink(public_path('uploads/profile-pictures/'.$imageLink));
+            }
+
+             if ($deleteType=='article'){
+                unlink(public_path('uploads/featured-images/'.$imageLink));
+            }
+            
+        }
+
+    
+        if($deleteType=='user') {
+            $stmt= $conn->prepare("delete from users where id =  $deleteId");
+            $stmt->execute();
+
+            $stmt= $conn->prepare("delete from user_logs where user_id = '$deleteId'");
+            $stmt->execute();
+        }
+
+        if($deleteType=='article') {
+            $stmt= $conn->prepare("delete from articles where id =  $deleteId");
+            $stmt->execute();
+
+            $stmt= $conn->prepare("delete from article_versions where article_id = '$deleteId'");
+            $stmt->execute();
+        }
+        
+
+        echo 'Successful';
+    
+
+    }
 }
         
 }

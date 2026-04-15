@@ -45,17 +45,209 @@ class PageController extends Controller
 
 
 
-    public function articles ($slug=null,$category=null,$date=null,$tag=null){
+    public function articles (){
         $pageName = 'Articles';
 
         $user=null;
+        $slug=null;
+        $category=null;
+        $tag=null;
+        $writer=null;
+        $date=null;
+
 
         $publicFolder= $this->publicFolder;
        
 
-        return view ('articles', compact('pageName','user','slug','date'));
+        return view ('articles', compact('pageName','user','slug','category','tag','writer','date'));
    
     }
+
+    public function article_slug ($slug){
+        $conn= config('app.conn');
+         $publicFolder= config('app.publicFolder');
+
+        // $pageName = 'Articles';
+
+        $user=null;
+        $slug=$slug;
+        $category=null;
+        $tag=null;
+        $writer=null;
+        $date=null;
+
+        $publicFolder= $this->publicFolder;
+
+
+        if ($slug) {
+
+        $stmt = $conn->prepare("SELECT * FROM articles WHERE slug='$slug'");
+        $stmt->execute();
+        $info = $stmt->fetch();
+
+
+        if ($info) {
+            $articleInfo= true;
+
+            $articleId = $info ['id'];
+            $articleWriterId = $info ['writer_id'];
+
+            $stmt = $conn->prepare("SELECT * FROM users WHERE id = $articleWriterId");
+            $stmt->execute();
+            $writerInfo = $stmt->fetch();
+
+            if($writerInfo) {
+                $articleWriterName = $writerInfo ['name'];
+                $articleWriterDescription = $writerInfo ['description'];
+                $articleWriterProfilePicture = $writerInfo ['profile_picture_link'] ? $publicFolder.$writerInfo ['profile_picture_link'] : $publicFolder."/assets/images/user.svg";
+                $articleWriterUsername = $writerInfo ['username'];
+            } 
+
+            $articleTitle = $info ['title'];
+            $articleImage = $info ['image'] ? $publicFolder.$articleInfo ['image'] : "";
+            $articleCategory = $info ['category'];
+            $articleTopic = $info ['topic'];
+            $articleVersion = $info ['version'];
+
+            $stmt = $conn->prepare("SELECT * FROM article_versions WHERE article_id= $articleId AND version = $articleVersion");
+            $stmt->execute();
+            $version= $stmt->fetch();
+
+            if ($version){
+                $articleBody = $version ['version_body'];
+            }
+         
+            $articlePubDate = $info ['published'];
+            $articleUpdateDate = $info ['updated'];
+            $articleStatus = $info ['status'];
+
+        
+            if ($articleStatus!="Published") {
+                $unpublishedNotice = true;
+            }
+
+            $pageName = $articleTitle; 
+
+            if ($pageName == 'Terms of Use') {
+            return redirect ($publicFolder.'/terms-of-use');
+            }
+
+            if ($pageName == 'About Us') {
+            return redirect($publicFolder.'/about-us');
+            }
+
+            if ($pageName == 'Data Privacy') {
+             return redirect ($publicFolder.'/data-privacy');
+            }
+            
+        } else {
+            $articleStatus='';
+            $articleWriterUsername='';
+            $articleWriterProfilePicture='';
+            $articleWriterName='';
+            $articleCategory='';
+            $articlePubDate='';
+            $articleUpdateDate='';
+            $articleImage='';
+            $articleTitle='';
+            $articleBody='';
+            $articleWriterDescription='';
+            $articleInfo= false;
+        }
+
+        
+
+        
+      }
+
+
+
+        return view ('articles', compact('pageName','user','slug','category','tag','writer','date','articleStatus','articleWriterUsername','articleWriterProfilePicture','articleWriterName','articleCategory','articlePubDate','articleUpdateDate','articleImage','articleTitle','articleBody','articleWriterDescription','articleInfo'));
+   
+    }
+
+
+
+     public function article_category ($category){
+        $conn= config('app.conn');
+         $publicFolder= config('app.publicFolder');
+
+        $pageName = $category;
+
+        $user=null;
+        $slug=null;
+        $category=$category;
+        $tag=null;
+        $writer=null;
+        $date=null;
+
+        $publicFolder= $this->publicFolder;
+
+        return view ('articles', compact('pageName','user','slug','category','tag','writer','date'));
+   
+    }
+
+
+     public function article_tag ($tag){
+        $conn= config('app.conn');
+         $publicFolder= config('app.publicFolder');
+
+        $pageName = $tag;
+
+        $user=null;
+        $slug=null;
+        $category=null;
+        $tag=$tag;
+        $writer=null;
+        $date=null;
+
+        $publicFolder= $this->publicFolder;
+
+        return view ('articles', compact('pageName','user','slug','category','tag','writer','date'));
+   
+    }
+
+     public function article_writer ($writer){
+        $conn= config('app.conn');
+         $publicFolder= config('app.publicFolder');
+
+        $pageName = $writer;
+
+        $user=null;
+        $slug=null;
+        $category=null;
+        $tag=null;
+        $writer=$writer;
+        $date=null;
+
+        $publicFolder= $this->publicFolder;
+
+        return view ('articles', compact('pageName','user','slug','category','tag','writer','date'));
+   
+    }
+
+
+     public function article_date ($date){
+        $conn= config('app.conn');
+         $publicFolder= config('app.publicFolder');
+
+        $pageName = $date;
+
+        $user=null;
+        $slug=null;
+        $category=null;
+        $tag=null;
+        $writer=null;
+        $date=$date;
+
+        $publicFolder= $this->publicFolder;
+
+        return view ('articles', compact('pageName','user','slug','category','tag','writer','date'));
+   
+    }
+
+
+
 
 
     

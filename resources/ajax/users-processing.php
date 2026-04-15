@@ -376,220 +376,220 @@ if (isset($_POST['upload_image_submit']))  {
 
 
 
-if ($type == 'Owner') {
-if (isset($_POST['get_users_submit'])) {
+// if ($type == 'Owner') {
+// if (isset($_POST['get_users_submit'])) {
 
   
-$query = htmlspecialchars($_POST ['query']);  
+// $query = htmlspecialchars($_POST ['query']);  
  
-$limit = 5;
-  $currentPage = isset($_POST ['page'])? (int) $_POST ['page'] : 1;
+// $limit = 5;
+//   $currentPage = isset($_POST ['page'])? (int) $_POST ['page'] : 1;
 
-  if ($query) {
-      $currentPage = 1;
-  }
-  $offset = ($currentPage - 1) * $limit;
+//   if ($query) {
+//       $currentPage = 1;
+//   }
+//   $offset = ($currentPage - 1) * $limit;
 
   
   
-   $sqlCount = "SELECT COUNT(*) as total FROM users WHERE id !=$registrantId";
+//    $sqlCount = "SELECT COUNT(*) as total FROM users WHERE id !=$registrantId";
 
-   if ($query) {
-      $sqlCount = "SELECT COUNT(*) as total FROM users WHERE name LIKE '%$query%' AND id !=$registrantId";
-   }
-
-
-
-   $sqlcountResult = mysqli_query($conn, $sqlCount);
-   $rows = mysqli_fetch_assoc($sqlcountResult)['total'];
-   $pages = ceil($rows/$limit);
+//    if ($query) {
+//       $sqlCount = "SELECT COUNT(*) as total FROM users WHERE name LIKE '%$query%' AND id !=$registrantId";
+//    }
 
 
 
-   $sqlGet = "SELECT * FROM users WHERE id !=$registrantId ORDER BY name ASC LIMIT  $offset,$limit";
+//    $sqlcountResult = mysqli_query($conn, $sqlCount);
+//    $rows = mysqli_fetch_assoc($sqlcountResult)['total'];
+//    $pages = ceil($rows/$limit);
+
+
+
+//    $sqlGet = "SELECT * FROM users WHERE id !=$registrantId ORDER BY name ASC LIMIT  $offset,$limit";
    
-   if ($query) {
-      $sqlGet = "SELECT * FROM users WHERE name LIKE '%$query%' AND id !=$registrantId ORDER BY name ASC LIMIT $limit";
-   }
+//    if ($query) {
+//       $sqlGet = "SELECT * FROM users WHERE name LIKE '%$query%' AND id !=$registrantId ORDER BY name ASC LIMIT $limit";
+//    }
 
 
-$sqlUsersList = $sqlGet;
-$sqlUsersListResult= mysqli_query($conn,$sqlUsersList);
+// $sqlUsersList = $sqlGet;
+// $sqlUsersListResult= mysqli_query($conn,$sqlUsersList);
 
 
-echo "<input id='user-rows' value=$rows hidden>";
-echo "<input id='user-pages' value=$pages hidden>";
-echo "<input id='user-current-page' value=$currentPage hidden>";
+// echo "<input id='user-rows' value=$rows hidden>";
+// echo "<input id='user-pages' value=$pages hidden>";
+// echo "<input id='user-current-page' value=$currentPage hidden>";
 
-if ($sqlUsersListResult->num_rows>0) { 
+// if ($sqlUsersListResult->num_rows>0) { 
 
-   while($users= $sqlUsersListResult->fetch_assoc()){ 
-         $userId = $users ['id'];
-         $name = $users ['name'];
+//    while($users= $sqlUsersListResult->fetch_assoc()){ 
+//          $userId = $users ['id'];
+//          $name = $users ['name'];
       
-         $attributeId = 'user-'.$userId;
-         $attributeClass = 'list-title';
+//          $attributeId = 'user-'.$userId;
+//          $attributeClass = 'list-title';
 
-         if ($userId != $registrantId) {
-                echo "<strong id='$attributeId' class='$attributeClass'>$name</strong>";
-         echo '<hr>';
-         }
+//          if ($userId != $registrantId) {
+//                 echo "<strong id='$attributeId' class='$attributeClass'>$name</strong>";
+//          echo '<hr>';
+//          }
         
           
-   }  
+//    }  
 
 
-} else {
-   echo '<small>No result</small>';
+// } else {
+//    echo '<small>No result</small>';
    
-}
+// }
 
 
 
            
-}
+// }
 
 
- }
-
-
-
-
-if (isset($_POST['get_user_submit'])){
-   $userId = htmlspecialchars($_POST['user_id']);
-
-   $sqlUser = "SELECT * FROM users WHERE id = $userId";
-   $sqlUserResult = mysqli_query($conn,$sqlUser);
-   $user = $sqlUserResult->fetch_assoc();
-
-   $responses = [];
-
-   if ($user) {
-      $responses ['user-first-name'] = $user['first_name'];
-      $responses ['user-middle-name'] = $user['middle_name'];
-      $responses ['user-last-name'] = $user['last_name'];
-      $responses ['user-name'] = $user['name'];
-      $responses ['user-email-address'] = $user['email_address'];
-      $responses ['user-username'] = $user['username'];
-      $responses ['user-type'] = $user['type'];
-      $responses ['user-status'] = $user['status'];
-   }
-
-
-   if ($responses) {
-      header('Content-Type: application/json');
-      $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
-      echo  $jsonResponses;
-   } else {
-      echo '';
-   }
-}
+//  }
 
 
 
 
+// if (isset($_POST['get_user_submit'])){
+//    $userId = htmlspecialchars($_POST['user_id']);
 
-if(isset($_POST['add_update_user_submit'])){
+//    $sqlUser = "SELECT * FROM users WHERE id = $userId";
+//    $sqlUserResult = mysqli_query($conn,$sqlUser);
+//    $user = $sqlUserResult->fetch_assoc();
 
-   $userId = htmlspecialchars($_POST['user_id']);
-   $firstName = htmlspecialchars($_POST['user_first_name']);
-   $lastName = htmlspecialchars($_POST['user_last_name']);
+//    $responses = [];
 
-   $name=trim($firstName.' '.$lastName);
-   $emailAddress = htmlspecialchars($_POST['user_email_address']);
-   $username = htmlspecialchars($_POST['user_username']);
-   $type = htmlspecialchars($_POST['user_type']);
+//    if ($user) {
+//       $responses ['user-first-name'] = $user['first_name'];
+//       $responses ['user-middle-name'] = $user['middle_name'];
+//       $responses ['user-last-name'] = $user['last_name'];
+//       $responses ['user-name'] = $user['name'];
+//       $responses ['user-email-address'] = $user['email_address'];
+//       $responses ['user-username'] = $user['username'];
+//       $responses ['user-type'] = $user['type'];
+//       $responses ['user-status'] = $user['status'];
+//    }
 
-   $generatedPassword = password_hash($username, PASSWORD_DEFAULT);
 
-   $status = htmlspecialchars($_POST['user_status']);
+//    if ($responses) {
+//       header('Content-Type: application/json');
+//       $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+//       echo  $jsonResponses;
+//    } else {
+//       echo '';
+//    }
+// }
 
-   $action = htmlspecialchars($_POST['add_update_action']);
 
-   $letterOnlyPattern ='/^[a-zA-Z ]+$/';
-   $responses = [];
-   $responses ['error'] = [];
+
+
+
+// if(isset($_POST['add_update_user_submit'])){
+
+//    $userId = htmlspecialchars($_POST['user_id']);
+//    $firstName = htmlspecialchars($_POST['user_first_name']);
+//    $lastName = htmlspecialchars($_POST['user_last_name']);
+
+//    $name=trim($firstName.' '.$lastName);
+//    $emailAddress = htmlspecialchars($_POST['user_email_address']);
+//    $username = htmlspecialchars($_POST['user_username']);
+//    $type = htmlspecialchars($_POST['user_type']);
+
+//    $generatedPassword = password_hash($username, PASSWORD_DEFAULT);
+
+//    $status = htmlspecialchars($_POST['user_status']);
+
+//    $action = htmlspecialchars($_POST['add_update_action']);
+
+//    $letterOnlyPattern ='/^[a-zA-Z ]+$/';
+//    $responses = [];
+//    $responses ['error'] = [];
    
 
 
 
-   if (!$firstName) {
-      $error = 'Please enter first name.';
-      array_push($responses ['error'],$error);
-   } else {
-       if (!preg_match($letterOnlyPattern,$firstName)) {
-        $error = 'First name is not valid.';
-        array_push($responses ['error'],$error);
-        }
-   }
+//    if (!$firstName) {
+//       $error = 'Please enter first name.';
+//       array_push($responses ['error'],$error);
+//    } else {
+//        if (!preg_match($letterOnlyPattern,$firstName)) {
+//         $error = 'First name is not valid.';
+//         array_push($responses ['error'],$error);
+//         }
+//    }
 
 
-   if (!$lastName) {
-      $error= 'Please enter last name.';
-     array_push($responses ['error'],$error);
-   } else {
-       if (!preg_match($letterOnlyPattern,$lastName)) {
-       $error = 'Last name is not valid.';
-        array_push($responses ['error'],$error);
-        }
-   }
+//    if (!$lastName) {
+//       $error= 'Please enter last name.';
+//      array_push($responses ['error'],$error);
+//    } else {
+//        if (!preg_match($letterOnlyPattern,$lastName)) {
+//        $error = 'Last name is not valid.';
+//         array_push($responses ['error'],$error);
+//         }
+//    }
 
 
-   if (!$emailAddress) {
-      $error = 'Please enter email address.';
-    array_push($responses ['error'],$error);
-   } else {
-       if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) { 
-       $error = 'Email address is not valid.';
-     array_push($responses ['error'],$error);
-      }else {
+//    if (!$emailAddress) {
+//       $error = 'Please enter email address.';
+//     array_push($responses ['error'],$error);
+//    } else {
+//        if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) { 
+//        $error = 'Email address is not valid.';
+//      array_push($responses ['error'],$error);
+//       }else {
          
-      if ($action=='Add') {
-            $sqlEmail = "SELECT * FROM users WHERE email_address = '$emailAddress'";
-            $resultEmail = mysqli_query($conn, $sqlEmail);
-            $rowCountEmail = mysqli_num_rows($resultEmail);
+//       if ($action=='Add') {
+//             $sqlEmail = "SELECT * FROM users WHERE email_address = '$emailAddress'";
+//             $resultEmail = mysqli_query($conn, $sqlEmail);
+//             $rowCountEmail = mysqli_num_rows($resultEmail);
 
-            if ($rowCountEmail>0) { 
-            $error = 'Email address is already added.';
-           array_push($responses ['error'],$error);
-            }
-      }
+//             if ($rowCountEmail>0) { 
+//             $error = 'Email address is already added.';
+//            array_push($responses ['error'],$error);
+//             }
+//       }
         
-    }
-   }
+//     }
+//    }
 
 
-   if (!$username) {
-      $error = 'Please enter username.';
-     array_push($responses ['error'],$error);
-      } else {
-       if ($action=='Add') {
-       $sqlUsername = "SELECT * FROM users WHERE username = '$username'";
-         $resultUsername = mysqli_query($conn, $sqlUsername);
-         $rowCountUsername = mysqli_num_rows($resultUsername);
+//    if (!$username) {
+//       $error = 'Please enter username.';
+//      array_push($responses ['error'],$error);
+//       } else {
+//        if ($action=='Add') {
+//        $sqlUsername = "SELECT * FROM users WHERE username = '$username'";
+//          $resultUsername = mysqli_query($conn, $sqlUsername);
+//          $rowCountUsername = mysqli_num_rows($resultUsername);
 
-         if ($rowCountUsername>0) {
-                  $error = 'Username is already added.';
-               array_push($responses ['error'],$error);
+//          if ($rowCountUsername>0) {
+//                   $error = 'Username is already added.';
+//                array_push($responses ['error'],$error);
             
-         }
-       }
+//          }
+//        }
       
-   }
+//    }
 
 
 
 
-      if (!$type) {
-      $error = 'Please select type.';
-      array_push($responses ['error'],$error);
-      } 
+//       if (!$type) {
+//       $error = 'Please select type.';
+//       array_push($responses ['error'],$error);
+//       } 
 
 
-      if (!$status) {
-      $error = 'Please select status.';
-     array_push($responses ['error'],$error);
-      } 
+//       if (!$status) {
+//       $error = 'Please select status.';
+//      array_push($responses ['error'],$error);
+//       } 
  
 
 
@@ -599,68 +599,68 @@ if(isset($_POST['add_update_user_submit'])){
    
 
 
-    if (!$responses['error']) {
+//     if (!$responses['error']) {
 
-      if ($action == 'Add') {
+//       if ($action == 'Add') {
 
-         $sqlAddUser = "INSERT INTO users (first_name,last_name,name,email_address,username,password,type,status) VALUES (?,?,?,?,?,?,?,?)";
-         $stmt = mysqli_stmt_init($conn);
+//          $sqlAddUser = "INSERT INTO users (first_name,last_name,name,email_address,username,password,type,status) VALUES (?,?,?,?,?,?,?,?)";
+//          $stmt = mysqli_stmt_init($conn);
 
-         $prepareStmt = mysqli_stmt_prepare($stmt,$sqlAddUser);
+//          $prepareStmt = mysqli_stmt_prepare($stmt,$sqlAddUser);
 
-            if ($prepareStmt) {
-               mysqli_stmt_bind_param($stmt,"ssssssss", $firstName,$lastName,$name,$emailAddress,$username,$generatedPassword,$type,$status);
-               mysqli_stmt_execute($stmt);
+//             if ($prepareStmt) {
+//                mysqli_stmt_bind_param($stmt,"ssssssss", $firstName,$lastName,$name,$emailAddress,$username,$generatedPassword,$type,$status);
+//                mysqli_stmt_execute($stmt);
 
-               $newUserId = mysqli_insert_id($conn);
+//                $newUserId = mysqli_insert_id($conn);
 
-               $responses ['status'] = 'Successful';
-               $responses ['user-id'] = $newUserId;
-               $responses ['user-email-address'] = $emailAddress;
+//                $responses ['status'] = 'Successful';
+//                $responses ['user-id'] = $newUserId;
+//                $responses ['user-email-address'] = $emailAddress;
 
-            }
+//             }
 
-      }
+//       }
 
 
-      if ($action == 'Update') {
+//       if ($action == 'Update') {
 
-         $sqlUpdateUser = "UPDATE users
-                            SET 
-                            type=?,
-                            status = ?
-                            WHERE id = '$userId'";
+//          $sqlUpdateUser = "UPDATE users
+//                             SET 
+//                             type=?,
+//                             status = ?
+//                             WHERE id = '$userId'";
 
-         $stmt = mysqli_stmt_init($conn);
+//          $stmt = mysqli_stmt_init($conn);
 
-         $prepareStmt = mysqli_stmt_prepare($stmt,$sqlUpdateUser);
+//          $prepareStmt = mysqli_stmt_prepare($stmt,$sqlUpdateUser);
 
-            if ($prepareStmt) {
-               mysqli_stmt_bind_param($stmt,"ss", $type,$status);
-               mysqli_stmt_execute($stmt);
+//             if ($prepareStmt) {
+//                mysqli_stmt_bind_param($stmt,"ss", $type,$status);
+//                mysqli_stmt_execute($stmt);
 
-               $responses ['status'] = 'Successful';
-            }       
+//                $responses ['status'] = 'Successful';
+//             }       
          
-      }
+//       }
 
     
-   } else {
-         $responses['status'] = 'Unsuccessful'; 
-   }
+//    } else {
+//          $responses['status'] = 'Unsuccessful'; 
+//    }
    
    
    
    
-      if ($responses) {
-            header('Content-Type: application/json');
-            $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
-            echo  $jsonResponses;
-      }
+//       if ($responses) {
+//             header('Content-Type: application/json');
+//             $jsonResponses = json_encode($responses,JSON_PRETTY_PRINT);
+//             echo  $jsonResponses;
+//       }
       
 
 
-}
+// }
 
 
 

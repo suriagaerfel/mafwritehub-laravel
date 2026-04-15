@@ -940,162 +940,162 @@ if (isset($_POST['upload_image_submit'])) {
 
 
 
-if (isset($_POST['get_featured_categories_submit'])) {
+// if (isset($_POST['get_featured_categories_submit'])) {
     
     
-    $sqlCategories = "SELECT * FROM article_categories";
-    $sqlCategoriesResult = mysqli_query($conn,$sqlCategories);
+//     $sqlCategories = "SELECT * FROM article_categories";
+//     $sqlCategoriesResult = mysqli_query($conn,$sqlCategories);
 
     
-   if ($sqlCategoriesResult->num_rows>0) {
+//    if ($sqlCategoriesResult->num_rows>0) {
              
-    while ($categories = $sqlCategoriesResult->fetch_assoc()) {
-    $category = $categories ['name'];
-      if($category !='Administrative') {
-            echo "<a class='navigation-button' href='$website/articles/categories/$category'>$category</a>";     
-      }
+//     while ($categories = $sqlCategoriesResult->fetch_assoc()) {
+//     $category = $categories ['name'];
+//       if($category !='Administrative') {
+//             echo "<a class='navigation-button' href='$website/articles/categories/$category'>$category</a>";     
+//       }
         
 
-    } 
+//     } 
     
-    } 
-}
+//     } 
+// }
 
 
-if(isset($_POST['get_featured_articles_submit'])) {
+// if(isset($_POST['get_featured_articles_submit'])) {
    
-   $articleCategory = htmlspecialchars($_POST['article_category']);
-   $articleTag = htmlspecialchars($_POST['article_tag']);
-   $articleDate = htmlspecialchars($_POST['article_date']);
-   $articleWriter = htmlspecialchars($_POST['article_writer']);
-   $articleSearch = htmlspecialchars($_POST['article_search']);
+//    $articleCategory = htmlspecialchars($_POST['article_category']);
+//    $articleTag = htmlspecialchars($_POST['article_tag']);
+//    $articleDate = htmlspecialchars($_POST['article_date']);
+//    $articleWriter = htmlspecialchars($_POST['article_writer']);
+//    $articleSearch = htmlspecialchars($_POST['article_search']);
  
-   $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published'";
+//    $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published'";
 
-   if ($articleSearch) {
-      $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' AND title LIKE '%$articleSearch%'";
-   }
-
-
-   if ($articleCategory) {
-      $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' AND category ='$articleCategory'"; 
-
-      if ($articleSearch) {
-      $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' AND category ='$articleCategory' AND title LIKE '%$articleSearch%'";
-      }
-   }
-
-   if ($articleWriter) {
-      $sqlWriter = "SELECT * FROM users WHERE username = '$articleWriter'";
-      $sqlWriterResult = mysqli_query($conn,$sqlWriter);
-      $writer = $sqlWriterResult->fetch_assoc();
-
-      if ($writer){
-         $writerUserId = $writer ['id'];
-      }
-      $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and  writer_id='$writerUserId'"; 
-
-      if ($articleSearch) {
-      $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and  writer_id='$writerUserId' AND title LIKE '%$articleSearch%'";
-      }
-   }
+//    if ($articleSearch) {
+//       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' AND title LIKE '%$articleSearch%'";
+//    }
 
 
-   if ($articleTag) {
-       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and tag ='$articleTag'"; 
+//    if ($articleCategory) {
+//       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' AND category ='$articleCategory'"; 
 
-       if ($articleSearch) {
-      $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and tag ='$articleTag' AND title LIKE '%$articleSearch%'";
-      }
-   }
+//       if ($articleSearch) {
+//       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' AND category ='$articleCategory' AND title LIKE '%$articleSearch%'";
+//       }
+//    }
 
-   if ($articleDate) {
-       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and published LIKE '%$articleDate%'"; 
+//    if ($articleWriter) {
+//       $sqlWriter = "SELECT * FROM users WHERE username = '$articleWriter'";
+//       $sqlWriterResult = mysqli_query($conn,$sqlWriter);
+//       $writer = $sqlWriterResult->fetch_assoc();
 
-        if ($articleSearch) {
-      $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and published LIKE '%$articleDate%' AND title LIKE '%$articleSearch%'";
-      }
-   }
+//       if ($writer){
+//          $writerUserId = $writer ['id'];
+//       }
+//       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and  writer_id='$writerUserId'"; 
 
-   $sqlFeaturedArticlesResult = mysqli_query($conn,$sqlFeaturedArticles);
+//       if ($articleSearch) {
+//       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and  writer_id='$writerUserId' AND title LIKE '%$articleSearch%'";
+//       }
+//    }
 
-    if ($sqlFeaturedArticlesResult->num_rows>0) {
+
+//    if ($articleTag) {
+//        $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and tag ='$articleTag'"; 
+
+//        if ($articleSearch) {
+//       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and tag ='$articleTag' AND title LIKE '%$articleSearch%'";
+//       }
+//    }
+
+//    if ($articleDate) {
+//        $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and published LIKE '%$articleDate%'"; 
+
+//         if ($articleSearch) {
+//       $sqlFeaturedArticles = "SELECT * FROM articles WHERE status='Published' and published LIKE '%$articleDate%' AND title LIKE '%$articleSearch%'";
+//       }
+//    }
+
+//    $sqlFeaturedArticlesResult = mysqli_query($conn,$sqlFeaturedArticles);
+
+//     if ($sqlFeaturedArticlesResult->num_rows>0) {
              
-    while ($articles = $sqlFeaturedArticlesResult->fetch_assoc()) {
-    $title = $articles ['title'];
-    $category = $articles ['category'];
-    $slug = $articles ['slug'];
-    $image = $articles ['image'] ? $privateFolder.$articles ['image']: $website.'/assets/images/default-featured-image.jpg';
-      if ($category !='Administrative') {
-      echo "<div style='display:flex;flex-direction:column; width:400px; background-color:white;padding:20px;' class='featured-article-item'>";
-         echo "<img src='$image' style='width:100%;'> "; 
-         echo "<a class='' href='$website/articles/read/$slug'><strong>$title</strong></a>";      
-      echo "</div>";
+//     while ($articles = $sqlFeaturedArticlesResult->fetch_assoc()) {
+//     $title = $articles ['title'];
+//     $category = $articles ['category'];
+//     $slug = $articles ['slug'];
+//     $image = $articles ['image'] ? $privateFolder.$articles ['image']: $website.'/assets/images/default-featured-image.jpg';
+//       if ($category !='Administrative') {
+//       echo "<div style='display:flex;flex-direction:column; width:400px; background-color:white;padding:20px;' class='featured-article-item'>";
+//          echo "<img src='$image' style='width:100%;'> "; 
+//          echo "<a class='' href='$website/articles/read/$slug'><strong>$title</strong></a>";      
+//       echo "</div>";
 
-      }
+//       }
       
-    } 
+//     } 
     
-    } 
+//     } 
 
 
-}
+// }
 
 
 
-if(isset($_POST['get_searched_articles_submit'])) {
+// if(isset($_POST['get_searched_articles_submit'])) {
    
-   $articleCategory = htmlspecialchars($_POST['article_category']);
-   $articleTag = htmlspecialchars($_POST['article_tag']);
-   $articleWriter = htmlspecialchars($_POST['article_writer']);
-   $articleDate = htmlspecialchars($_POST['article_date']);
-   $query = htmlspecialchars($_POST['query']);
+//    $articleCategory = htmlspecialchars($_POST['article_category']);
+//    $articleTag = htmlspecialchars($_POST['article_tag']);
+//    $articleWriter = htmlspecialchars($_POST['article_writer']);
+//    $articleDate = htmlspecialchars($_POST['article_date']);
+//    $query = htmlspecialchars($_POST['query']);
  
-   if ($query){
+//    if ($query){
 
-   $sqlSearchedArticles = "SELECT * FROM articles WHERE status='Published' and category !='Administrative' AND title LIKE '%$query%' ORDER BY title ASC";
+//    $sqlSearchedArticles = "SELECT * FROM articles WHERE status='Published' and category !='Administrative' AND title LIKE '%$query%' ORDER BY title ASC";
 
-   if ($articleCategory) {
-       $sqlSearchedArticles = "SELECT * FROM articles WHERE status='Published' and category ='$articleCategory' AND title LIKE '%$query%' ORDER BY title ASC";
-   }
-
-
-   if ($articleTag) {
-       $sqlSearchedArticles = "SELECT * FROM articles WHERE status='Published' and tag ='$articleTag' AND title LIKE '%$query%' ORDER BY title ASC";
-   }
+//    if ($articleCategory) {
+//        $sqlSearchedArticles = "SELECT * FROM articles WHERE status='Published' and category ='$articleCategory' AND title LIKE '%$query%' ORDER BY title ASC";
+//    }
 
 
+//    if ($articleTag) {
+//        $sqlSearchedArticles = "SELECT * FROM articles WHERE status='Published' and tag ='$articleTag' AND title LIKE '%$query%' ORDER BY title ASC";
+//    }
 
-   if ($articleWriter) {
-      $sqlWriter = "SELECT * FROM users WHERE username = '$articleWriter'";
-      $sqlWriterResult = mysqli_query($conn,$sqlWriter);
-      $writer = $sqlWriterResult->fetch_assoc();
 
-      if ($writer){
-         $writerUserId = $writer ['id'];
-      }
 
-       $sqlSearchedArticles = "SELECT * FROM articles WHERE status='Published' and writer_id ='$writerUserId' AND title LIKE '%$query%' ORDER BY title ASC";
-   }
+//    if ($articleWriter) {
+//       $sqlWriter = "SELECT * FROM users WHERE username = '$articleWriter'";
+//       $sqlWriterResult = mysqli_query($conn,$sqlWriter);
+//       $writer = $sqlWriterResult->fetch_assoc();
 
-   $sqlSearchedArticlesResult = mysqli_query($conn,$sqlSearchedArticles);
+//       if ($writer){
+//          $writerUserId = $writer ['id'];
+//       }
 
-      if ($sqlSearchedArticlesResult->num_rows>0) {
+//        $sqlSearchedArticles = "SELECT * FROM articles WHERE status='Published' and writer_id ='$writerUserId' AND title LIKE '%$query%' ORDER BY title ASC";
+//    }
+
+//    $sqlSearchedArticlesResult = mysqli_query($conn,$sqlSearchedArticles);
+
+//       if ($sqlSearchedArticlesResult->num_rows>0) {
                
-      while ($searcheArticles = $sqlSearchedArticlesResult->fetch_assoc()) {
-      $searchedTitle = $searcheArticles ['title'];
-      $searchedCategory = $searcheArticles ['category'];
-      $searchedSlug = $searcheArticles ['slug'];
+//       while ($searcheArticles = $sqlSearchedArticlesResult->fetch_assoc()) {
+//       $searchedTitle = $searcheArticles ['title'];
+//       $searchedCategory = $searcheArticles ['category'];
+//       $searchedSlug = $searcheArticles ['slug'];
       
-      if ($searchedCategory !='Administrative') {
-             echo "<a href='$website/articles/read/$searchedSlug'><strong>$searchedTitle</strong></a>"; 
-      }
+//       if ($searchedCategory !='Administrative') {
+//              echo "<a href='$website/articles/read/$searchedSlug'><strong>$searchedTitle</strong></a>"; 
+//       }
             
-      } 
+//       } 
     
-    } else {
-      echo "<small>No result</small>";
-    }
+//     } else {
+//       echo "<small>No result</small>";
+//     }
 
-   }
-}
+//    }
+// }

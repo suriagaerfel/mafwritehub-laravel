@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\PageController;
 use App\Http\Middleware\AccountRecordsMiddleware;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -23,8 +24,14 @@ Route::get('/articles/tag/{tag}', [PageController::class, 'articles']);
 Route::get('/articles/writer/{owner}', [PageController::class, 'articles']);
 Route::get('/articles/date/{date}', [PageController::class, 'articles']);
 Route::get('/article/{date}', [PageController::class, 'edit_article']);
-Route::get('/article/', [PageController::class, 'add_article']);
 
+Route::get('/articles/read/{slug}', [PageController::class, 'article_slug']);
+Route::get('/articles/categories/{category}', [PageController::class, 'article_category']);
+Route::get('/articles/tags/{tag}', [PageController::class, 'article_tag']);
+Route::get('/articles/writers/{writer}', [PageController::class, 'article_writer']);
+Route::get('/articles/dates/{date}', [PageController::class, 'article_date']);
+
+Route::get('/article/', [PageController::class, 'add_article']);
 
 
 Route::post('/login', [AccountController::class, 'login']);
@@ -43,17 +50,25 @@ Route::post('/get-profile', [DashboardController::class, 'get_profile']);
 Route::post('/get-authors', [DashboardController::class, 'get_authors']);
 Route::post('/get-articles', [DashboardController::class, 'get_articles']);
 Route::post('/get-article', [DashboardController::class, 'get_article']);
-Route::post('/get-version-content', [DashboardController::class, 'get_version_content']);
+Route::post('/get-version-body', [DashboardController::class, 'get_version_body']);
 Route::post('/get-article-categories', [DashboardController::class, 'get_article_categories']);
 Route::post('/get-article-topics', [DashboardController::class, 'get_article_topics']);
 Route::post('/add-category', [DashboardController::class, 'add_category']);
 Route::post('/add-topic', [DashboardController::class, 'add_topic']);
 Route::post('/delete-category', [DashboardController::class, 'delete_category']);
 Route::post('/delete-topic', [DashboardController::class, 'delete_topic']);
-Route::post('/get-article-content-versions', [DashboardController::class, 'get_article_content_versions']);
+Route::post('/get-article-versions', [DashboardController::class, 'get_article_versions']);
 Route::post('/update-article-status', [DashboardController::class, 'update_article_status']);
-Route::post('/add-article', [DashboardController::class, 'add_article']);
+Route::post('/save-article', [DashboardController::class, 'save_article']);
 Route::post('/delete-article', [DashboardController::class, 'delete_article']);
+Route::post('/get-article-image', [DashboardController::class, 'get_article_image']);
 
 Route::post('/get-users', [DashboardController::class, 'get_users']);
+Route::post('/get-user', [DashboardController::class, 'get_user']);
+Route::post('/save-user', [DashboardController::class, 'save_user']);
+Route::post('/delete', [DashboardController::class, 'delete']);
 
+
+Route::post('/get-searched-articles', [FeaturesController::class, 'get_searched_articles']);
+Route::post('/get-featured-articles', [FeaturesController::class, 'get_featured_articles']);
+Route::post('/get-featured-categories', [FeaturesController::class, 'get_featured_categories']);

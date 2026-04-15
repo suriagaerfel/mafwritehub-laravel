@@ -11,35 +11,24 @@
         </div>
        
      
-
-        @include('components/categories-list')
+        <div id="desktop-tablet-categories-list-container">
+         @include('components/categories-list')
+       </div>
+        <span id="search-article-button"><i class="bi bi-search" ></i></span>
+        
+        <div id="desktop-tablet-header-links-container" style="margin-top:-20px;">
+         @include('components/header-links')
+        </div>
        
+        <span id="menu"><i class="bi bi-three-dots-vertical"></i></span>
 
-        <div style="width: 300px;">
-            <input type="search" id="article-search" placeholder="Search..."> 
-            <div id="searched-articles-list" style="background-color: aliceblue;padding:5px; display:none;">
-            </div>
-        </div>
-        <div style="width: 300px;">
-            @include ('components/footer-socials')
-        </div>
-
-         <?php if (!$loggedIn){?>
-                    <span class="login-button" style="background-color: #77CBDA;padding:5px;border-radius:10px;cursor:pointer;color:white;">Login</span>
-                <?php } ?>
-
-                <?php if ($loggedIn){?>
-                    <div style="display: flex; gap:10px; justify-content:center;">
-                    <span><a href="<?php echo $publicFolder.'/dashboard' ?>" target="_blank" style="background-color: #77CBDA;padding:5px;border-radius:10px;color:white;">Dashboard</a></span>
-                    <span id="home-logout-button" style="background-color: #9F1717; padding:5px;border-radius:10px;color:white;cursor:pointer;">Logout</span>
-                    </div>
-        <?php } ?>
+       
        
     </div>
      <hr>
 <?php } ?>
-
-    @include('components/website-modal')
+    @include ('components/website-modal')
+   
       
         
 

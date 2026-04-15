@@ -305,13 +305,13 @@
                     <button onclick="toggleCode()">💻</button>
 
                     <div  id="dashboard-add-edit-article-buttons">
-                    <span id="article-save-button" class="link-tag-button">Save</span>
-                    <span id="article-publish-button" class="link-tag-button">Publish</span>
-                    <span id="article-unpublish-button" class="link-tag-button">Unpublish</span>
-                    <span id="article-delete-button" class="link-tag-button">Delete</span>
-                    <span id="article-image-button" class="link-tag-button">Article Image</span>
-                    <a id="article-view-button" class="link-tag-button">View</a>
-                </div>
+                        <span id="article-save-button" class="link-tag-button">Save</span>
+                        <span id="article-publish-button" class="link-tag-button">Publish</span>
+                        <span id="article-unpublish-button" class="link-tag-button">Unpublish</span>
+                        <span id="article-delete-button" class="link-tag-button">Delete</span>
+                        <span id="article-image-button" class="link-tag-button">Article Image</span>
+                        <a id="article-view-button" class="link-tag-button">View</a>
+                    </div>
                 </div>
            
                 

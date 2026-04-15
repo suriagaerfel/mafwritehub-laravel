@@ -4,9 +4,12 @@
 <x-main>
 
     @include ('components/head')
-    @include ('components/header')
 
-    <div id="dashboard-page" class="page" style="background-image: url(<?php echo $publicFolder.'/assets/images/home-image.jpg'?>);">
+
+    <body>
+    @include ('components/header')  
+    
+    <div id="dashboard-page" class="page" >
         <div id="dashboard-menus" class="dashboard-sections">
             <a href="<?php echo $publicFolder;?>"><img src="<?php echo $publicFolder.'/assets/images/home.png'?>" class="icon"></a>
             
@@ -88,8 +91,8 @@
             
               <div style="display: flex; gap:10px; justify-content:right;">
                 <hr>
-                <small id="article-current-page-show" class="article-pages-show"></small>
-                <small id="article-pages-show" class="article-pages-show"></small>
+                <small id="article-current-page-show" class="article-pages-show article-pagination"></small>
+                <small id="article-pages-show" class="article-pages-show article-pagination"></small>
                 
                 <span class="link-tag-button article-pagination" id="article-previous-page">Prev</span>
                 <span class="link-tag-button article-pagination" id="article-next-page">Next</span>
@@ -99,7 +102,7 @@
         </div>
 
         <?php if ($type == 'Owner') {?>
-        <div id="dashboard-other-users" class="dashboard-sections">
+        <div id="dashboard-other-users" class="dashboard-sections" style="justify-content:space-between;">
             <h2>Other Users</h2>
             <div style="display: flex; gap:10px;" id="dashboard-user-filter">
                 
@@ -113,7 +116,7 @@
             </div>
                
                    
-              <div style="display: flex; gap:10px; justify-content:right;">
+            <div style="display: flex; gap:10px; justify-content:right;">
                     <hr>
                     <small id="user-current-page-show" class="user-pages-show"></small>
                     <small id="user-pages-show" class="user-pages-show"></small>
@@ -131,8 +134,6 @@
 
     </div>
 
-
-    
 
     @include('components/footer-scripts')
 

@@ -17,43 +17,7 @@ function restoreSelection() {
 
 function format(command, value = null) {
     document.getElementById("editor").focus();
-
-    // Toggle superscript/subscript - manually check for <sup> or <sub>
-    if (command === "superscript" || command === "subscript") {
-        const sel = window.getSelection();
-        if (sel.rangeCount > 0) {
-            const range = sel.getRangeAt(0);
-            const container = range.commonAncestorContainer;
-
-            // Check if selection is inside sup/sub tag
-            let hasSupSub = false;
-            let checkNode = range.startContainer;
-            if (range.startContainer.nodeType === Node.TEXT_NODE) {
-                checkNode = range.startContainer.parentElement;
-            }
-
-            // Walk up parents to find sup/sub
-            while (checkNode) {
-                if (
-                    checkNode.tagName === "SUP" ||
-                    checkNode.tagName === "SUB"
-                ) {
-                    hasSupSub = true;
-                    break;
-                }
-                checkNode = checkNode.parentElement;
-            }
-
-            if (hasSupSub) {
-                // Unwrap sup/sub - return to normal text
-                document.execCommand("removeFormat");
-            } else {
-                document.execCommand(command, false, value);
-            }
-        }
-    } else {
-        document.execCommand(command, false, value);
-    }
+    document.execCommand(command, false, value);
 }
 
 function formatBlock(tag) {
@@ -408,11 +372,3 @@ document.getElementById("editor").addEventListener("click", function (e) {
         link.href = u;
     });
 });
-
-function showArticleMetaModal() {
-    $("#modal-article-meta").show();
-}
-
-function closeArticleMetaModal() {
-    $("#modal-article-meta").hide();
-}

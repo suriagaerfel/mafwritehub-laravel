@@ -429,6 +429,8 @@ function getArticles() {
 }
 
 function initializeArticlePanel() {
+    $("#article-toolbar-extra-buttons-container").hide();
+
     var article_id = $("#article-id").val();
     var article_mode = $("#article-mode").val();
 
@@ -442,6 +444,7 @@ function initializeArticlePanel() {
         $.ajax({
             url: public_folder + "/get-article",
             type: "POST",
+            dataType: "json",
             async: true,
             data: {
                 article_id: article_id,
@@ -457,7 +460,7 @@ function initializeArticlePanel() {
                     responses["article-topic"],
                 );
                 $("#article-originally-selected-version").val(
-                    responses["article-content-version"],
+                    responses["article-version"],
                 );
 
                 $("#article-original-category").val(
@@ -465,12 +468,14 @@ function initializeArticlePanel() {
                 );
                 $("#article-original-topic").val(responses["article-topic"]);
                 $("#article-original-version").val(
-                    responses["article-content-version"],
+                    responses["article-version"],
                 );
 
                 $("#article-version").prop("disabled", false);
 
-                $(".note-editable").html(responses["article-content"]);
+                $("#editor").html(responses["article-body"]);
+
+                $("#article-toolbar-extra-buttons-container").show();
 
                 if (responses["article-status"] != "Published") {
                     $("#article-save-button").show();
@@ -492,7 +497,7 @@ function initializeArticlePanel() {
 
                 getArticleCategories();
                 getArticleTopics();
-                getArticleContentVersions();
+                getArticleVersions();
 
                 console.log(responses);
             },
@@ -518,29 +523,31 @@ function initializeArticlePanel() {
         $("#article-image-button").hide();
         $("#article-view-button").hide();
 
-        $(".note-editable").html("");
+        $("#editor").html("");
+
+        $("#article-toolbar-extra-buttons-container").show();
 
         getArticleCategories();
         getArticleTopics();
-        getArticleContentVersions();
+        getArticleVersions();
     }
 }
 
-function getVersionContent() {
-    var article_content_version = $("#article-version option:selected").val();
+function getVersionBody() {
+    var article_version = $("#article-version option:selected").val();
     var article_id = $("#article-id").val();
 
     $.ajax({
-        url: public_folder + "/get-version-content",
+        url: public_folder + "/get-version-body",
         type: "POST",
         async: true,
         data: {
             article_id: article_id,
-            article_content_version: article_content_version,
-            get_version_content_submit: true,
+            article_version: article_version,
+            get_version_body_submit: true,
         },
         success: function (responses) {
-            $(".note-editable").html(responses);
+            $("#editor").html(responses);
         },
     });
 }
@@ -576,7 +583,7 @@ function closeConfirmDeleteModal() {
 function checkFeaturedImage() {
     var article_id = $("#article-id").val();
     $.ajax({
-        url: "../../private/includes/processing/article-processing.php",
+        url: public_folder + "/get-article-image",
         type: "POST",
         async: true,
         data: {
@@ -588,7 +595,7 @@ function checkFeaturedImage() {
                 $("#modal-show-image").show();
                 $("#article-image-shown").attr(
                     "src",
-                    "/mafeper/private/" + responses,
+                    public_folder + "/uploads/featured-images/" + responses,
                 );
             }
 
@@ -897,16 +904,16 @@ function closeAddTopic() {
     getArticleTopics();
 }
 
-function getArticleContentVersions() {
+function getArticleVersions() {
     var article_id = $("#article-id").val();
 
     $.ajax({
-        url: public_folder + "/get-article-content-versions",
+        url: public_folder + "/get-article-versions",
         type: "POST",
         async: true,
         data: {
             article_id: article_id,
-            get_article_content_versions_submit: true,
+            get_article_versions_submit: true,
         },
         success: function (responses) {
             $("#article-version").html(responses);
@@ -951,11 +958,11 @@ function saveArticle(storage_type) {
     var article_title = $("#article-title").val();
     var article_category = $("#article-category").val();
     var article_topic = $("#article-topic").val();
-    var article_content_version = $("#article-version option:selected").val();
-    var article_content = $("#summernote").val();
+    var article_version = $("#article-version option:selected").val();
+    var article_body = $("#editor").html();
 
     $.ajax({
-        url: public_folder + "/add-article",
+        url: public_folder + "/save-article",
         type: "POST",
         dataType: "json",
         data: {
@@ -965,9 +972,9 @@ function saveArticle(storage_type) {
             article_title: article_title,
             article_category: article_category,
             article_topic: article_topic,
-            article_content_version: article_content_version,
-            article_content: article_content,
-            article_submit: true,
+            article_version: article_version,
+            article_body: article_body,
+            save_article_submit: true,
         },
         success: function (responses) {
             console.log(responses);
@@ -1047,8 +1054,9 @@ function showEditUserModal(number) {
     $("#modal-add-edit-user").show();
 
     $.ajax({
-        url: users_processing_file,
+        url: public_folder + "/get-user",
         type: "POST",
+        dataType: "json",
         async: true,
         data: {
             user_id: number,
@@ -1106,7 +1114,7 @@ function showAddUserModal() {
     $("#user-delete-button").hide();
 }
 
-function submitUser(add_update_action) {
+function saveUser(save_action) {
     var user_id = $("#current-user-id").val();
     var user_first_name = $("#user-first-name").val();
     var user_last_name = $("#user-last-name").val();
@@ -1118,8 +1126,9 @@ function submitUser(add_update_action) {
     var user_status = $("#user-status").val();
 
     $.ajax({
-        url: users_processing_file,
+        url: public_folder + "/save-user",
         type: "POST",
+        dataType: "json",
         async: true,
         data: {
             user_id: user_id,
@@ -1129,8 +1138,8 @@ function submitUser(add_update_action) {
             user_username: user_username,
             user_type: user_type,
             user_status: user_status,
-            add_update_action: add_update_action,
-            add_update_user_submit: true,
+            save_action: save_action,
+            save_user_submit: true,
         },
         success: function (responses) {
             console.log(responses);
@@ -1143,20 +1152,15 @@ function submitUser(add_update_action) {
                 $("#modal-add-edit-user").hide();
                 getUsers();
 
-                if (add_update_action == "Add") {
-                    var new_user_id = responses["user-id"];
-                    var new_user_email_address =
+                if (save_action == "Add") {
+                    var verifying_userid = responses["user-id"];
+                    var verifying_email_address =
                         responses["user-email-address"];
-                    $.ajax({
-                        url: send_verification_link_processing_file,
-                        type: "POST",
-                        async: true,
-                        data: {
-                            verifying_email_address: new_user_email_address,
-                            verifying_userid: new_user_id,
-                            new_verify_submit: true,
-                        },
-                    });
+
+                    sendVerificationLink(
+                        verifying_email_address,
+                        verifying_userid,
+                    );
                 }
             }
 
@@ -1177,15 +1181,14 @@ function showConfirmDeleteUserModal() {
 }
 function getFeaturedCategories() {
     $.ajax({
-        url: article_processing_file,
+        url: public_folder + "/get-featured-categories",
         type: "POST",
         async: true,
         data: {
             get_featured_categories_submit: true,
         },
         success: function (responses) {
-            $("#categories-list").html(responses);
-            console.log(responses);
+            $(".categories-list").html(responses);
         },
     });
 }
@@ -1248,7 +1251,7 @@ function uploadSubmit() {
 //function to get featured categories
 function getFeaturedArticles() {
     $.ajax({
-        url: article_processing_file,
+        url: public_folder + "/get-featured-articles",
         type: "POST",
         async: true,
         data: {
@@ -1272,7 +1275,7 @@ function getSearchedArticles() {
 
     if (query.length > 2) {
         $.ajax({
-            url: article_processing_file,
+            url: public_folder + "/get-searched-articles",
             type: "POST",
             async: true,
             data: {
@@ -1380,22 +1383,14 @@ function showConfirmDeleteModal(message, type, id) {
 function proceedDelete() {
     var type = $("#delete-type").val();
     var id = $("#delete-id").val();
-    var action_file = "";
-
-    if (type == "article") {
-        action_file = public_folder + "/delete-article";
-    }
-
-    if (type == "user") {
-        action_file = public_folder + "/delete-user";
-    }
 
     $.ajax({
-        url: action_file,
+        url: public_folder + "/delete",
         type: "POST",
         async: true,
         data: {
             id: id,
+            type: type,
             delete_submit: true,
         },
         success: function (responses) {
@@ -1414,6 +1409,18 @@ function proceedDelete() {
             }
         },
     });
+}
+
+function showSearchArticlesModal() {
+    $("#modal-search-articles").show();
+}
+
+function hideSearchArticlesModal() {
+    $("#modal-search-articles").hide();
+}
+
+function toggleMenuContentMobile() {
+    $("#modal-menu").toggle();
 }
 
 function initializeSummernote() {

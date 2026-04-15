@@ -25,7 +25,7 @@
     <div class="modal website-modal website-modal-wrapper" id="modal-upload-image">
         <div class="website-modal-content">
                 <div class="close-modal-container">
-                    <a class="close" id="close-modal-upload-image">&times;</a>
+                    <span class="close" id="close-modal-upload-image"><i class="bi bi-x"></i></span>
                 </div>
                     <small class='modal-replace-image-warning'>
                         Select an image with a JPEG or JPG format. 
@@ -53,13 +53,33 @@
 
 <?php //---------------------------FOR ARTICLES SEARCH-------------------------------------?>
 
-    <div class="modal website-modal website-modal-wrapper" id="modal-searched-articles" >
+    <div class="modal website-modal website-modal-wrapper" id="modal-search-articles" >
         <div class="website-modal-content" style="width: 50%; height:fit-content; min-height:50vh; background-color:white; " >
 
-            <!-- <div id="searched-articles-list">
-            </div> -->
+        <div class="close-modal-container">
+            <span class='close' id="close-modal-search-articles"><i class="bi bi-x"></i></span>
+        </div>
+
+      
+            <input type="search" id="article-search" placeholder="Search..."> 
+            <div id="searched-articles-list" style="display:none;">
+            </div>
          
-            
+        </div>
+    </div>
+
+
+
+
+<?php //---------------------------FOR MENU-------------------------------------?>
+
+    <div class="modal website-modal website-modal-wrapper" id="modal-menu" >
+        <div class="website-modal-content" style="background-color:white;" >
+           
+            @include('components/header-links')
+            <hr>
+            @include('components/categories-list')
+
         </div>
     </div>
 
@@ -98,7 +118,7 @@
     <div class="modal website-modal website-modal-wrapper" id="modal-show-image">
         <div class="website-modal-content" id="modal-content-show-image">
                 <div class="close-modal-container" style="width: 100%;">
-                    <a class="close" id="close-modal-show-image">&times;</a>
+                    <span class="close" id="close-modal-show-image"><i class="bi bi-x"></i></span>
                 </div>
                     
                 
@@ -126,7 +146,7 @@
     <div class="modal website-modal website-modal-wrapper" id="modal-login">
         <div class="website-modal-content">
             <div class="close-modal-container">
-                 <a class="close close-without-null-redirection">&times;</a>
+                 <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
             <div id="login-form">            
                 <h5 class="form-title">Login</h5>
@@ -162,7 +182,7 @@
     <div class="modal website-modal website-modal-wrapper" id="modal-get-password-reset-otp">
         <div class="website-modal-content">
             <div class="close-modal-container">
-                    <a class="close close-without-null-redirection">&times;</a>
+                    <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
 
             <div id="get-password-reset-otp-form">
@@ -185,7 +205,7 @@
     <div class="modal website-modal website-modal-wrapper" id="modal-otp-for-reset-password">
         <div class="website-modal-content">
             <div class="close-modal-container">
-                    <a class="close close-without-null-redirection">&times;</a>
+                    <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
 
             <div id="enter-password-reset-otp-form">
@@ -212,7 +232,7 @@
     <div class="modal website-modal website-modal-wrapper" id="modal-reset-password">
         <div class="website-modal-content" style="height:fit-content">
             <div class="close-modal-container">
-                    <a class="close close-without-null-redirection">&times;</a>
+                    <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
 
             <div id="modal-reset-password-form">
@@ -242,13 +262,13 @@
      <?php //-----------------FOR ADDING/EDITING ARTICLES----------------------------- ?>
 
     <div class="modal website-modal website-modal-wrapper" id="modal-add-edit-article">
-        <div class="website-modal-content" style="width: 90%; height:90vh; margin:auto; overflow:scroll;" id="modal-add-edit-article-content">
+        <div class="website-modal-content" style="width: 90%; height:90vh; margin:auto; overflow:scroll;scrollbar-height:none;scrollbar-width:none; " id="modal-add-edit-article-content">
            
             <div class="close-modal-container">
-                 <a class="close close-without-null-redirection">&times;</a>
+                 <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
             
-            @include ('components/text-editor')
+            @include('components/text-editor')
 
                 
         </div>
@@ -260,10 +280,10 @@
     <?php //-----------------FOR ARTICLE META----------------------------- ?>
 
     <div class="modal website-modal website-modal-wrapper" id="modal-article-meta">
-        <div class="website-modal-content" style="width: 90%; height:90vh; margin:auto; overflow:scroll;" id="modal-add-edit-article-content">
+        <div class="website-modal-content" style="width: 350px; height:fit-content; margin:auto;">
            
             <div class="close-modal-container">
-                 <a class="close close-without-null-redirection">&times;</a>
+                 <span onclick="closeArticleMetaModal()"><i class="bi bi-x"></i></span>
             </div>
 
             <div id="add-edit-article-container">
@@ -343,7 +363,7 @@
         <div class="website-modal-content" style="width: 40%; height:fit-content; margin:auto;">
            
             <div class="close-modal-container">
-                 <a class="close close-without-null-redirection">&times;</a>
+                 <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
 
             <div id="user-message" class="alert alert-danger">
@@ -401,7 +421,7 @@
         <div class="website-modal-content" style="width: 40%; height:fit-content; margin:auto;">
            
             <div class="close-modal-container">
-                 <a class="close close-without-null-redirection">&times;</a>
+                 <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
 
             <div id="user-message" class="alert alert-danger">
