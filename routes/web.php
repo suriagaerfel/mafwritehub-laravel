@@ -47,16 +47,24 @@ Route::post('/reset-password', [AccountController::class, 'reset_password']);
 
 
 Route::post('/get-profile', [DashboardController::class, 'get_profile']);
+Route::post('/update-profile', [DashboardController::class, 'update_profile']);
 Route::post('/get-authors', [DashboardController::class, 'get_authors']);
 Route::post('/get-articles', [DashboardController::class, 'get_articles']);
 Route::post('/get-article', [DashboardController::class, 'get_article']);
 Route::post('/get-version-body', [DashboardController::class, 'get_version_body']);
+
 Route::post('/get-article-categories', [DashboardController::class, 'get_article_categories']);
-Route::post('/get-article-topics', [DashboardController::class, 'get_article_topics']);
+Route::post('/get-article-tags', [DashboardController::class, 'get_article_tags']);
+Route::post('/get-article-categories-settings', [DashboardController::class, 'get_article_categories_settings']);
+Route::post('/get-article-tags-settings', [DashboardController::class, 'get_article_tags_settings']);
+
+
 Route::post('/add-category', [DashboardController::class, 'add_category']);
-Route::post('/add-topic', [DashboardController::class, 'add_topic']);
+Route::post('/add-tag', [DashboardController::class, 'add_tag']);
+
 Route::post('/delete-category', [DashboardController::class, 'delete_category']);
-Route::post('/delete-topic', [DashboardController::class, 'delete_topic']);
+Route::post('/delete-tag', [DashboardController::class, 'delete_tag']);
+
 Route::post('/get-article-versions', [DashboardController::class, 'get_article_versions']);
 Route::post('/update-article-status', [DashboardController::class, 'update_article_status']);
 Route::post('/save-article', [DashboardController::class, 'save_article']);

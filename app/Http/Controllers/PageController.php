@@ -106,7 +106,7 @@ class PageController extends Controller
             $articleTitle = $info ['title'];
             $articleImage = $info ['image'] ? $publicFolder.$articleInfo ['image'] : "";
             $articleCategory = $info ['category'];
-            $articleTopic = $info ['topic'];
+            $articleTags= $info ['tags'];
             $articleVersion = $info ['version'];
 
             $stmt = $conn->prepare("SELECT * FROM article_versions WHERE article_id= $articleId AND version = $articleVersion");
@@ -153,6 +153,7 @@ class PageController extends Controller
             $articleBody='';
             $articleWriterDescription='';
             $articleInfo= false;
+            $pageName = '404 Not Found';
         }
 
         
@@ -261,10 +262,8 @@ class PageController extends Controller
         $pageName = 'About Us';
 
 
-        // return view ('about-us', compact('pageName'));
+        return view ('admin-articles', compact('pageName'));
 
-        $publicFolder=config('app.publicFoldr');
-        return redirect($publicFolder.'/articles');
         
     }
 
@@ -272,29 +271,21 @@ class PageController extends Controller
 
     public function data_privacy (AccountRecordsService $service){
 
-        $user=null;
-        
         $pageName = 'Data Privacy';
 
 
-        // return view ('data-privacy', compact('pageName','user'));
+        return view ('admin-articles', compact('pageName'));
 
-        $publicFolder=config('app.publicFoldr');
-        return redirect($publicFolder.'/articles');
         
     }
 
      public function terms_of_use (AccountRecordsService $service){
 
-        $user=null;
-        
-        $pageName = 'Terms of Use';
+         $pageName = 'Terms of Use';
 
 
-        // return view ('terms-of-use', compact('pageName','user'));
+        return view ('admin-articles', compact('pageName'));
 
-        $publicFolder=config('app.publicFoldr');
-        return redirect($publicFolder.'/articles');
         
     }
 

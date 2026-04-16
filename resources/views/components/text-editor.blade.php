@@ -27,7 +27,7 @@
 
   
   <!-- Headings / Paragraph -->
-  <select onchange="formatBlock(this.value)" style="margin-top: 12px;">
+  <select onchange="formatBlock(this.value)" style="margin-top: 12px;" id="text-tag">
     <option value="p">P</option>
     <option value="h1">H1</option>
     <option value="h2">H2</option>
@@ -44,16 +44,7 @@
   <button onclick="insertLink()"><i class="bi bi-link"></i></button>
   <button onclick="insertImage()"><i class="bi bi-card-image"></i></button>
   <button onclick="insertVideo()"><i class="bi bi-play-btn-fill"></i></button>
-  <div id='article-toolbar-extra-buttons-container' style="display: none;">
-    <button onclick="showArticleMetaModal()">Details</button>
-    <button id="article-save-button">Save</button>
-    <button id="article-publish-button">Publish</button>
-    <button id="article-unpublish-button">Unpublish</button>
-    <button id="article-delete-button">Delete</button>
-    <button id="article-image-button">Image</button>
-    <button id="article-view-button">View</button>
-    <input type="file" id="fileInput" onchange="uploadFile(event)" hidden>
-  </div>
+ <input type="file" id="fileInput" onchange="uploadFile(event)" hidden>
 
 </div>
 

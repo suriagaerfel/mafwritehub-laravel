@@ -206,7 +206,7 @@ public function get_article (Request $request){
 
             $articleTitle = $article ['title'];
             $articleCategory = $article ['category'];
-            $articleTopic = $article ['topic'];
+            $articleTags = $article ['tags'];
             $articleVersion = $article ['version'];
 
 
@@ -223,7 +223,7 @@ public function get_article (Request $request){
             $responses ['article-id'] = $articleId;
             $responses ['article-title'] = $articleTitle;
             $responses ['article-category'] = $articleCategory;
-            $responses ['article-topic'] = $articleTopic;
+            $responses ['article-tags'] = $articleTags;
             $responses ['article-version'] = $articleVersion;
             $responses ['article-body'] = $articleBody;
             $responses ['article-status'] = $articleStatus;
@@ -373,10 +373,114 @@ public function get_article_categories (Request $request){
         }
             
         
-        echo "<option class='category-option' value='Add'>Add Category</option>";
+        
 
         }
 }
+
+
+
+public function get_article_tags (Request $request){
+    if ($request->input('get_article_tags_submit')) {
+        $conn= config('app.conn');
+
+        $selectedTags= htmlspecialchars($_POST['selected_tags']);
+
+
+        $stmt= $conn->prepare("SELECT * FROM article_tags");
+        $stmt->execute();
+        $count= $stmt->rowCount();
+
+        if ($count>0) {
+        
+            while ($tag = $stmt->fetch()) {
+            $tagName = $tag ['name'];
+
+                if (!$selectedTags) {
+                    echo "<span class='".'not-selected link-tag-button'."' value='".$tagName."' style='margin-bottom:3px;'>$tagName</span>";
+                }
+                 
+                  if ($selectedTags){
+                    if (str_contains($selectedTags,$tagName)) {
+                         echo "<span class='".'selected link-tag-button'."' value='".$tagName."' style='margin-bottom:3px;'>$tagName</span>";
+                    }
+
+                     if (!str_contains($selectedTags,$tagName)) {
+                         echo "<span class='".'not-selected link-tag-button'."' value='".$tagName."' style='margin-bottom:3px;'>$tagName</span>";
+                    }
+                  }
+
+
+            }
+
+        } else {
+            echo "No tag";
+        }
+            
+        
+        
+
+        }
+}
+
+
+
+
+public function get_article_categories_settings (Request $request){
+    if ($request->input('get_article_categories_settings_submit')) {
+        $conn= config('app.conn');
+
+       
+        $stmt= $conn->prepare("SELECT * FROM article_categories");
+        $stmt->execute();
+        $count= $stmt->rowCount();
+
+        if ($count>0) {
+        
+            while ($categories = $stmt->fetch()) {
+            $category = $categories ['name'];
+  
+            echo "<span class='link-tag-button' style='margin-bottom:3px;'>$category</span>";
+          
+            }
+        } else {
+            echo "<small>No category yet</small>";
+        }    
+        
+        
+
+        }
+}
+
+
+
+public function get_article_tags_settings (Request $request){
+    if ($request->input('get_article_tags_settings_submit')) {
+        $conn= config('app.conn');
+
+       
+        $stmt= $conn->prepare("SELECT * FROM article_tags");
+        $stmt->execute();
+        $count= $stmt->rowCount();
+
+        if ($count>0) {
+        
+            while ($tags = $stmt->fetch()) {
+            $tag = $tags ['name'];
+  
+            echo "<span class='link-tag-button' style='margin-bottom:3px;'>$tag</span>";
+          
+            }
+        } else {
+            echo "<small>No tag yet</small>";
+        }    
+        
+        
+
+        }
+}
+
+
 
 
 public function get_article_topics (Request $request){
@@ -458,19 +562,28 @@ public function get_article_topics (Request $request){
 
             
             echo "<option class='topic-option' value=$topic>$topic</option>";
-            
-            
-
-
+           
             }
 
         }
             
         
-        echo "<option class='topic-option' value='Add'>Add Topic</option>";
+        
 
         }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 public function add_category (Request $request){
@@ -479,25 +592,41 @@ public function add_category (Request $request){
 
         $newCategory = htmlspecialchars($_POST['new_category']);
 
-        $stmt= $conn->prepare("INSERT INTO article_categories (name) VALUES (?)");
+        $stmt= $conn->prepare("SELECT * FROM article_categories WHERE name = ?");
         $stmt->execute([$newCategory]);
+        $category= $stmt->fetch();
 
-            echo 'Category added';
+        if (!$category) {
+             $stmt= $conn->prepare("INSERT INTO article_categories (name) VALUES (?)");
+            $stmt->execute([$newCategory]);
+        }
+       
         }
 }
 
 
-public function add_topic (){
-    if (isset($_POST['add_topic_submit'])) {
+
+public function add_tag (Request $request){
+    if ($request->input('add_tag_submit')) {
         $conn= config('app.conn');
-        $newTopic = htmlspecialchars($_POST['new_topic']);
 
-        $stmt= $conn->prepare("INSERT INTO article_topics(name) VALUES (?)");
-        $stmt->execute([$newTopic]);
+        $newTag = htmlspecialchars($_POST['new_tag']);
 
-        echo 'Topic added';
-    }
+        $stmt= $conn->prepare("SELECT * FROM article_tags WHERE name = ?");
+        $stmt->execute([$newTag]);
+        $tag= $stmt->fetch();
+        
+        if (!$tag) {
+             $stmt= $conn->prepare("INSERT INTO article_tags (name) VALUES (?)");
+            $stmt->execute([$newTag]);
+        }
+
+       
+        }
 }
+
+
+
 
 public function delete_category (Request $request){
         if ($request->input('delete_category_submit')) {
@@ -511,16 +640,18 @@ public function delete_category (Request $request){
 
 }
 
+public function delete_tag (Request $request){
+        if ($request->input('delete_tag_submit')) {
+            $conn= config('app.conn');
 
-public function delete_topic (Request $request){
-    if ($request->input('delete_topic_submit')) {
-    $conn= config('app.conn');
-    $deleteTopic = htmlspecialchars($_POST['delete_topic']);
-    $stmt= $conn->prepare("delete from article_topics where name=?");
-    $stmt->execute([$deleteTopic]);
-      
+            $deleteTag = htmlspecialchars($_POST['delete_tag']);
+            $stmt = $conn->prepare("delete from article_tags where name=?");
+            $stmt->execute([$deleteTag]);
     }
+
 }
+
+
 
 
 public function get_article_versions (Request $request){
@@ -529,22 +660,41 @@ public function get_article_versions (Request $request){
 
         $articleId = htmlspecialchars($_POST['article_id']);
 
-   if ($articleId) {
+//    if ($articleId) {
    
-      $stmt= $conn->prepare("SELECT * FROM article_versions WHERE article_id = ? ORDER BY id DESC");
-      $stmt->execute([$articleId]);
-      $count = $stmt->rowCount();
+//       $stmt= $conn->prepare("SELECT * FROM article_versions WHERE article_id = ? ORDER BY id DESC");
+//       $stmt->execute([$articleId]);
+//       $count = $stmt->rowCount();
       
-      if ($count>0) {
-         while($articleVersions =$stmt->fetch()) {
-            $articleVersion = $articleVersions ['version'];
-            echo "<option value=$articleVersion>Content V$articleVersion</option>";
-         }
-      } 
+//       if ($count>0) {
+//          while($articleVersions =$stmt->fetch()) {
+//             $articleVersion = $articleVersions ['version'];
+//             echo "<option value=$articleVersion>Content V$articleVersion</option>";
+//          }
+//       } 
   
-   } else {
-      echo "<option value=0 disabled selected>No Version</option>";
-   }
+//    } else {
+//       echo "<option value=0 disabled selected>No Version</option>";
+//    }
+
+
+    if ($articleId) {
+    
+        $stmt= $conn->prepare("SELECT * FROM article_versions WHERE article_id = ? ORDER BY id DESC");
+        $stmt->execute([$articleId]);
+        $count = $stmt->rowCount();
+        
+        if ($count>0) {
+            echo "<span>Versions: </span>";
+            while($articleVersions =$stmt->fetch()) {
+                $articleVersion = $articleVersions ['version'];
+                echo "<span value=$articleVersion class='link-tag-button' style='margin-bottom:3px;'>$articleVersion</span>";
+            }
+        } 
+    
+    } else {
+        echo "<span>Version: No Version</span>";
+    }
   
 
 }
@@ -609,13 +759,12 @@ public function save_article (Request $request){
     $userId = session('user_id');
 
    $storageType = htmlspecialchars($_POST['storage_type']);
-   $articleMode = htmlspecialchars($_POST['article_mode']);
    $articleId = htmlspecialchars($_POST['article_id']);
 
    $articleTitle = htmlspecialchars($_POST['article_title']);
    $slug = generateSlug($articleTitle);
    $articleCategory = htmlspecialchars($_POST['article_category']);
-   $articleTopic = htmlspecialchars($_POST['article_topic']);
+   $articleTags = htmlspecialchars($_POST['article_tags']);
 
    $articleVersion = htmlspecialchars($_POST['article_version']);
    
@@ -628,7 +777,7 @@ public function save_article (Request $request){
       if($articleId){
          $_SESSION ["article-{$articleId}-title"] = $articleTitle;
          $_SESSION ["article-{$articleId}-category"] = $articleCategory;
-         $_SESSION ["article-{$articleId}-topic"] = $articleTopic;
+         $_SESSION ["article-{$articleId}-tags"] = $articleTags;
          $_SESSION ["article-{$articleId}-version"] = $articleVersion;
          $_SESSION ["article-{$articleId}-body"] = $articleBody;
       }
@@ -636,7 +785,7 @@ public function save_article (Request $request){
        if(!$articleId){
          $_SESSION ["article-title"] = $articleTitle;
          $_SESSION ["article-category"] = $articleCategory;
-         $_SESSION ["article-topic"] = $articleTopic;
+         $_SESSION ["article-tags"] = $articleTags;
          $_SESSION ["article-version"] = $articleVersion;
          $_SESSION ["article-body"] = $articleBody;
       }
@@ -660,12 +809,20 @@ public function save_article (Request $request){
        
       }
 
-      if (!$articleTopic) {
-         $error = 'Please select a topic';
+      if (!$articleTags) {
+         $error = 'Please add at least one tag.';
         array_push($responses['error'],$error); 
     
         
       }
+
+       if (!$articleBody) {
+         $error = 'Article body must not be empty.';
+        array_push($responses['error'],$error); 
+    
+        
+      }
+
 
 
       //Check if the title already exists
@@ -705,10 +862,10 @@ public function save_article (Request $request){
                $stmt = $conn->prepare("UPDATE articles 
                                     SET title=?,
                                        category=?,
-                                       topic=?,
+                                       tags=?,
                                        version=?
                                        WHERE id = ?");
-                $stmt->execute([$articleTitle,$articleCategory,$articleTopic,$newVersion,$articleId]);
+                $stmt->execute([$articleTitle,$articleCategory,$articleTags,$newVersion,$articleId]);
 
                 $update_articleId = $articleId;
              
@@ -717,8 +874,8 @@ public function save_article (Request $request){
             if(!$articleId){
                   $newVersion = 1;
 
-                  $stmt = $conn->prepare("INSERT INTO articles (title,slug,category,topic,writer_id,version) VALUES(?,?,?,?,?,?)");
-                  $stmt->execute([$articleTitle,$slug,$articleCategory,$articleTopic,$userId,$newVersion]);
+                  $stmt = $conn->prepare("INSERT INTO articles (title,slug,category,tags,writer_id,version) VALUES(?,?,?,?,?,?)");
+                  $stmt->execute([$articleTitle,$slug,$articleCategory,$articleTags,$userId,$newVersion]);
 
                    $update_articleId =  $conn->lastInsertId();
 
@@ -788,8 +945,8 @@ public function delete_article (Request $request){
 
 
 
-public function add_profile (Request $request){
-    if ($request->input('profile_submit')) {
+public function update_profile (Request $request){
+    if ($request->input('update_profile_submit')) {
     
     $conn= config('app.conn');
     $registrantId = session ('user_id');
@@ -888,6 +1045,8 @@ public function add_profile (Request $request){
 
      if (!$responses['error']) {
 
+    
+
       $stmt=$conn->prepare("UPDATE users
                             SET 
                             first_name=?,
@@ -897,7 +1056,7 @@ public function add_profile (Request $request){
                            username=?,
                             type=?
                             WHERE id = ?");
-        $stmt->execute([$registrantId]);
+        $stmt->execute([$profileFirstName, $profileMiddleName,$profileLastName,$profileEmailAddress,$profileUsername,$profileAccountType,$registrantId]);
          $responses['status'] = 'Successful'; 
 
      } else {

@@ -267,93 +267,32 @@
             <div class="close-modal-container">
                  <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
+
+            <div id="article-actions-container">
+                @include('components/article-actions')
+            </div>
+
+
+            <div id="article-message" style="display: none;" class="alert-danger"></div>
+
+            <div id="article-meta-container">
+                @include('components/article-meta')
+            </div>
             
-            @include('components/text-editor')
+            <div id="article-versions-container">
+                 @include('components/article-version')
+            </div>
 
-                
-        </div>
-
-    </div>
-
-
-
-    <?php //-----------------FOR ARTICLE META----------------------------- ?>
-
-    <div class="modal website-modal website-modal-wrapper" id="modal-article-meta">
-        <div class="website-modal-content" style="width: 350px; height:fit-content; margin:auto;">
            
-            <div class="close-modal-container">
-                 <span onclick="closeArticleMetaModal()"><i class="bi bi-x"></i></span>
-            </div>
 
-            <div id="add-edit-article-container">
-                <div id="article-message" class="alert alert-danger"></div>
-                <div id="article-head-details" style="display: flex; gap:10px; flex-direction:column;">
-                    <input type="text" id="article-mode" hidden>
-                    <input type="text" id="article-id" hidden>
-                    <input type="text" id="article-title" placeholder="Title">
-                    <div style="display: flex; flex-direction:column; gap:10px;">
-                        <div style="display: flex; flex-direction:column; width:100%;">
-                            <div style="display: flex; gap:10px;" class="article-category-update">
-                                <input type="text" id="article-original-category" hidden>
-                                <select id="article-category" class="article-category-update">
-                                   <option id="article-originally-selected-category" selected></option>
-                                </select>
-                                <img src="<?php echo $publicFolder.'/assets/images/minus.png'?>" class="icon article-category-update" id="article-category-delete-submit-button" style="display: none;">
-                            </div>
-                            <div style="display: flex; gap:10px;" class="article-category-add">
-                                <input type="text" placeholder="Add category..." class="new article-category-add" id="article-category-add-input">
-                                <div>
-                                    <img src="<?php echo $publicFolder.'/assets/images/plus.png'?>" class="icon new article-category-add" id="article-category-add-submit-button">
-                                    <img src="<?php echo $publicFolder.'/assets/images/close.png'?>" class="icon new article-category-add" id="article-category-add-close">
-                                </div>
-                            </div>
-                        </div>
-                        <div style="display: flex; flex-direction:column;width:100%;">
-                            <div style="display: flex; gap:10px;">
-                                <input type="text" id="article-original-topic" hidden>
-                                <select id="article-topic" class="article-topic-update">   
-                                    <option id="article-originally-selected-topic" selected></option>  
-                                </select>
-                                <img src="<?php echo $publicFolder.'/assets/images/minus.png'?>" class="icon article-topic-update" id="article-topic-delete-submit-button" style="display: none;">
-                            </div>
-
-                            <div style="display: flex; gap:10px;" class="article-topic-add">
-                                <input type="text" placeholder="Add topic..." class="new article-topic-add" id="article-topic-add-input">
-                                <div>
-                                    <img src="<?php echo $publicFolder.'/assets/images/plus.png'?>" class="icon new article-topic-add" id="article-topic-add-submit-button">
-                                    <img src="<?php echo $publicFolder.'/assets/images/close.png'?>" class="icon new article-topic-add" id="article-topic-add-close">
-                                </div>
-                    
-                            </div>
-                        </div>
-
-                        <div style="display: flex; flex-direction:column;width:100%;" id="article-version-container">
-                            <div style="display: flex; gap:10px;">
-                                <select id="article-version" class="article-version-update">     
-                                    <option id="article-originally-selected-version" selected></option>  
-                                </select>
-                            </div>
-                            
-                        </div>
-
-                    </div>
-                   
-
-                </div>
-                
-
-            </div>
+            @include('components/text-editor2')
 
             
-            
 
-        
                 
         </div>
 
     </div>
-
 
 
 
@@ -449,7 +388,7 @@
 
                 <option value="Guest Writer" <?php if ($type=='Guest Writer'){echo 'selected';}?>>Guest Writer</option>
             </select>
-            <button id="profile-submit-button">
+            <button id="update-profile-submit-button">
                 Update
             </button>
         
@@ -470,13 +409,48 @@
                 <h2>Settings</h2>
                 <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
             </div>
-            <div>
-                <span class="link-tag-button">Add/Remove Category</span>
-                <span class="link-tag-button">Add/Remove Tag</span>
-                <span class="link-tag-button">Update Theme</span>
-                <span class="link-tag-button">Update Ad Link</span>
-                <span class="link-tag-button">Update Social Links</span>
-                <span class="link-tag-button">Backup Data</span>
+           
+
+            <div style="display: flex; gap:10px;" id="main-settings-container">
+                <div class="settings-container" style="display: flex;flex-direction:column; justify-content:start;">
+                    
+                    <div id="update-article-category-container">
+                        <h3 >Update Category/Topic</h3><br><br>
+                        <span >Update Categories</span>
+                        <input type="text" id="article-category-add-input" placeholder="Enter a category"><br><br>
+                        <div id="article-categories-list-settings"></div>
+                    </div>
+                    <hr>
+                    <div id="update-article-topic-container">
+                        <span>Update Tags</span>
+                        <input type="text" id="article-tag-add-input" placeholder="Enter a tag"><br><br>
+                        <div id="article-tags-list-settings"></div>
+                    </div>
+                </div>
+
+
+                <div id="update-theme-container" class="settings-container" style="display: none;">
+                     <h3 >Update Theme</h3><br><br>
+                     <div>
+                        <span>Background</span>
+                        <input type="text" id="background-image-url" placeholder="Image url...">
+                        <div style="display: flex; justify-content:space-between; gap:15px;">
+                            <input type="file" id="background-image-upload">
+                            <input type="color" id="background-color">
+                        </div>
+                    </div>
+
+                    
+                    
+                </div>
+
+                <div id="update-links-container" class="settings-container">
+                     <h3 >Update Links</h3><br><br>
+                    <input type="text" id="facebook-link-submit" placeholder="Facebook link">
+                    <input type="text" id="facebook-link-submit" placeholder="Tiktok link">
+                    <input type="text" id="facebook-link-submit" placeholder="X link">
+                    <input type="text" id="facebook-link-submit" placeholder="Youtube link">
+                </div>
             </div>
 
             

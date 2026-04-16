@@ -23,7 +23,7 @@
                 $articleListTitle = $articlesList ['title']; 
                 $articleListSlug = $articlesList ['slug']; 
                 $articleListCategory = $articlesList ['category'];
-                $articleListTopic = $articlesList ['topic'];
+                $articleListTags = $articlesList ['tags'];
                 $articleListVersion = $articlesList ['version'];
 
                 $stmt=$conn->prepare("SELECT * FROM article_versions WHERE article_id= ? AND version = ?");
@@ -62,7 +62,7 @@
                     <a class="link-tag-button" href="<?php echo $publicFolder.'/articles/read/'.$articleListSlug;?>">Read</a>
                     <small><?php echo $articleListWriter;?></small>
                     <small><?php echo $articleListCategory;?></small>
-                    <small><?php echo $articleListTopic;?></small>
+                    <small><?php echo $articleListTags;?></small>
                     <small><?php echo $articleListPubDate;?></small>
                 </div>
 

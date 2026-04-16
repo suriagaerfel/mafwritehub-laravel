@@ -319,6 +319,10 @@ hr {
     border-radius: 5px;
 }
 
+.selected {
+    background-color: red;
+}
+
 .navigation-button {
     border-radius: none;
     /* box-shadow: var(--back-shadow); */
@@ -878,4 +882,18 @@ hr {
 
 .user-pagination {
     display: none;
+}
+
+#article-version,
+#article-version option {
+    width: fit-content !important;
+}
+
+.settings-container {
+    width: 350px;
+    margin: auto;
+    height: fit-content;
+    min-height: 500px;
+    box-shadow: var(--back-shadow);
+    padding: 15px;
 }

@@ -37,7 +37,6 @@
                     <h1 id="live-article-title"><?php echo $articleTitle?></h1>
                     <div id="live-article-details-container"  style="display:flex; gap:10px;">
                             <div>
-                                <em>by </em>
                                 <a href="<?php echo $publicFolder.'/articles/writers/'.$articleWriterUsername?>">
                                     <img src="<?php echo $articleWriterProfilePicture?>"class="icon" style="border-radius:50%;">
                                     <span><?php echo $articleWriterName;?></span>
@@ -45,21 +44,19 @@
                                 
                             </div>
                             <div>
-                                <em>Category: </em>
                                 <a href="<?php echo $publicFolder.'/articles/categories/'.$articleCategory;?>">
                                     <em><?php echo $articleCategory;?></em>
                                 </a>
                             </div>
                             <div>
-                                <em>Published: </em>
                                 <a href="<?php echo $publicFolder.'/articles/dates/'.date('Y-m', strtotime($articlePubDate));?>">  
-                                    <em><?php echo dcomplete_format($articlePubDate);?></em>
+                                    <?php echo dcomplete_format($articlePubDate);?>
                                 </a>
                             </div>
 
                             <?php if ($articleUpdateDate > $articlePubDate) {?>
                                 <div>
-                                    <em>Updated: </em><em><?php echo dcomplete_format($articleUpdateDate);?></em>
+                                    <span>(Updated <?php echo dcomplete_format($articleUpdateDate);?>)</span>
                                 </div>
                             <?php } ?>
                         

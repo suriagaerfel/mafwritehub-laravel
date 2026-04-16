@@ -4,7 +4,7 @@
     background: #f4f4f4;
 } */
 #toolbar {
-    background: #333;
+    /* background: #333; */
     padding: 10px;
     display: flex;
     flex-wrap: wrap;
@@ -14,8 +14,8 @@
 #toolbar button,
 #toolbar select,
 #toolbar input {
-    background: #555;
-    color: white;
+    /* background: #555; */
+    /* color: white; */
     border: none;
     padding: 6px 8px;
     cursor: pointer;
@@ -25,14 +25,13 @@
 }
 #toolbar button:hover,
 #toolbar select:hover {
-    background: #777;
+    /* background: #777; */
 }
 #editor {
-    background: white;
     padding: 10px;
     min-height: 400px;
     margin: 10px;
-    border: 1px solid #ccc;
+    border: 5px solid #706b6b;
     border-radius: 4px;
     overflow: auto;
     border: none !important;

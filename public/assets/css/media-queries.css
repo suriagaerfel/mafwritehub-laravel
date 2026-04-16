@@ -17,6 +17,30 @@
         /* margin-top: 0px !important; */
     }
 
+    #modal-settings {
+        padding-top: 15px;
+    }
+
+    #main-settings-container {
+        flex-direction: column !important;
+        overflow: scroll;
+        scrollbar-width: none;
+        scrollbar-height: none;
+    }
+
+    #article-category-container {
+        width: 100% !important;
+    }
+
+    #article-meta-container,
+    #article-versions-container {
+        display: none;
+    }
+
+    .settings-container {
+        width: 95% !important;
+    }
+
     .other-user-details {
         flex-direction: column !important;
     }
@@ -32,6 +56,10 @@
     #desktop-tablet-categories-list-container {
         display: none;
     }
+
+    #category-topic-verison-container {
+        flex-direction: column !important;
+    }
 }
 
 /*On tablet, hide header navigation buttons and show the navigation container.*/
@@ -42,6 +70,10 @@
 
     #menu {
         display: none;
+    }
+
+    .mobile-based {
+        display: none !important;
     }
 }
 
@@ -54,10 +86,6 @@
     #dashboard-menus {
         flex-direction: row !important;
         width: fit-content;
-    }
-
-    .panel-heading {
-        display: inline;
     }
 
     .home-content-section {

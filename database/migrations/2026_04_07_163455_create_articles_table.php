@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->string('image', 150)->nullable();
             $table->string('category', 64);
-            $table->string('topic', 100);
+            $table->longText('tags');
 
             $table->integer('writer_id');
             $table->string('writer_name', 256)->nullable();

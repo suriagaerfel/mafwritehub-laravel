@@ -72,9 +72,7 @@ function getProfile() {
     });
 }
 
-function saveProfile() {
-    var user_processing_file =
-        "../../private/includes/processing/users-processing.php";
+function updateProfile() {
     var profile_first_name = $("#profile-first-name-edit").val();
     var profile_middle_name = $("#profile-middle-name-edit").val();
     var profile_last_name = $("#profile-last-name-edit").val();
@@ -85,8 +83,9 @@ function saveProfile() {
     ).val();
 
     $.ajax({
-        url: user_processing_file,
+        url: public_folder + "/update-profile",
         type: "POST",
+        dataType: "json",
         async: true,
         data: {
             profile_first_name: profile_first_name,
@@ -95,7 +94,7 @@ function saveProfile() {
             profile_username: profile_username,
             profile_email_address: profile_email_address,
             profile_account_type: profile_account_type,
-            profile_submit: true,
+            update_profile_submit: true,
         },
         success: function (responses) {
             if (responses["status"] == "Successful") {
@@ -429,7 +428,7 @@ function getArticles() {
 }
 
 function initializeArticlePanel() {
-    $("#article-toolbar-extra-buttons-container").hide();
+    $("#article-actions-container").hide();
 
     var article_id = $("#article-id").val();
     var article_mode = $("#article-mode").val();
@@ -456,26 +455,21 @@ function initializeArticlePanel() {
                 $("#article-category option:selected").val(
                     responses["article-category"],
                 );
-                $("#article-originally-selected-topic").val(
-                    responses["article-topic"],
-                );
-                $("#article-originally-selected-version").val(
+                $("#article-tags-selected").val(responses["article-tags"]);
+
+                $("#article-original-version").val(
                     responses["article-version"],
                 );
 
                 $("#article-original-category").val(
                     responses["article-category"],
                 );
-                $("#article-original-topic").val(responses["article-topic"]);
-                $("#article-original-version").val(
-                    responses["article-version"],
-                );
 
                 $("#article-version").prop("disabled", false);
 
                 $("#editor").html(responses["article-body"]);
 
-                $("#article-toolbar-extra-buttons-container").show();
+                $("#article-actions-container").show();
 
                 if (responses["article-status"] != "Published") {
                     $("#article-save-button").show();
@@ -498,7 +492,7 @@ function initializeArticlePanel() {
                 $("#article-view-button").show();
 
                 getArticleCategories();
-                getArticleTopics();
+                getArticleTags();
                 getArticleVersions();
 
                 console.log(responses);
@@ -516,10 +510,10 @@ function initializeArticlePanel() {
         $("#article-title").val("");
 
         $("#article-category option:selected").val("Select Category");
-        $("#article-originally-selected-topic").val("");
+        $("#article-tags-selected").val("");
 
+        $("#article-original-version").val("");
         $("#article-original-category").val("");
-        $("#article-original-topic").val("");
 
         $("#article-version").prop("disabled", true);
 
@@ -529,16 +523,17 @@ function initializeArticlePanel() {
 
         $("#editor").html("");
 
-        $("#article-toolbar-extra-buttons-container").show();
+        $("#article-actions-container").show();
 
         getArticleCategories();
-        getArticleTopics();
+        getArticleTags();
         getArticleVersions();
     }
 }
 
-function getVersionBody() {
-    var article_version = $("#article-version option:selected").val();
+function getVersionBody(selected_version) {
+    var article_version = selected_version;
+
     var article_id = $("#article-id").val();
 
     $.ajax({
@@ -748,70 +743,120 @@ function getArticleCategories() {
     });
 }
 
-//get article topicss
-function getArticleTopics() {
-    var mode = $("#article-mode").val();
-    var original_topic = "";
-    var selected_topic = "";
-
-    if (mode == "edit") {
-        var original_topic = $("#article-original-topic").val();
-        var selected_topic = $("#article-topic option:selected").val();
-    }
-
-    if (mode == "new") {
-        var original_topic = "";
-        var selected_topic = "";
-    }
-
+function getArticleCategoriesSettings() {
     $.ajax({
-        url: public_folder + "/get-article-topics",
+        url: public_folder + "/get-article-categories-settings",
         type: "POST",
         async: true,
         data: {
-            selected_topic: selected_topic,
-            original_topic: original_topic,
-            mode: mode,
-            get_article_topics_submit: true,
+            get_article_categories_settings_submit: true,
         },
         success: function (responses) {
-            $("#article-topic").html(responses);
+            $("#article-categories-list-settings").html(responses);
             console.log(responses);
         },
     });
 }
 
-function initializeArticleCategory() {
-    var selected_category = $("#article-category option:selected").val();
+function getArticleTags() {
+    let selected_tags = $("#article-tags-selected").val();
 
-    if (!selected_category) {
-        $("#article-category-delete-submit-button").hide();
+    $.ajax({
+        url: public_folder + "/get-article-tags",
+        type: "POST",
+        async: true,
+        data: {
+            selected_tags: selected_tags,
+            get_article_tags_submit: true,
+        },
+        success: function (responses) {
+            console.log(responses);
+            $("#article-tags-list").html(responses);
+        },
+    });
+}
+
+function pushTag(newValue) {
+    var currentValue = $("#article-tags-selected").val();
+
+    if (currentValue === "") {
+        $("#article-tags-selected").val(newValue);
     } else {
-        if (selected_category == "Add") {
-            $(".article-category-add").show();
-            $(".article-category-update").hide();
-        } else {
-            if (selected_category != "Add") {
-                if (selected_category == "Select") {
-                    $("#article-category-delete-submit-button").hide();
-                }
-
-                if (selected_category != "Select") {
-                    $("#article-category-delete-submit-button").show();
-                }
-            }
+        if (!currentValue.includes(newValue)) {
+            var updatedValues = currentValue + ", " + newValue;
+            updatedValues = updatedValues.replace(/,+/g, ",");
+            updatedValues = updatedValues.replace(/^,*|,*$|,\s*,/g, "").trim();
+            $("#article-tags-selected").val(updatedValues);
         }
     }
+
+    // getArticleTags();
 }
 
-function initializeArticleTopics() {
-    var selected_topic = $("#article-topic option:selected").val();
+function removeTag(newValue) {
+    var currentValue = $("#article-tags-selected").val();
 
-    if (selected_topic == "Add") {
-        $(".article-topic-add").show();
-        $(".article-topic-update").hide();
+    if (currentValue.includes(newValue)) {
+        updatedValues = currentValue.replace(newValue, "");
+
+        if (currentValue.includes(", " + newValue)) {
+            updatedValues = currentValue.replace(", " + newValue, "");
+        }
+        updatedValues = updatedValues.replace(/,+/g, ",");
+        updatedValues = updatedValues.replace(/^,*|,*$|,\s*,/g, "").trim();
+        $("#article-tags-selected").val(updatedValues);
     }
+
+    // getArticleTags();
 }
+
+function getArticleTagsSettings() {
+    $.ajax({
+        url: public_folder + "/get-article-tags-settings",
+        type: "POST",
+        async: true,
+        data: {
+            get_article_tags_settings_submit: true,
+        },
+        success: function (responses) {
+            $("#article-tags-list-settings").html(responses);
+            console.log(responses);
+        },
+    });
+}
+
+//get article topicss
+// function getArticleTopics() {
+//     var mode = $("#article-mode").val();
+//     var original_topic = "";
+//     var selected_topic = "";
+
+//     if (mode == "edit") {
+//         var original_topic = $("#article-original-topic").val();
+//         var selected_topic = $("#article-topic option:selected").val();
+//     }
+
+//     if (mode == "new") {
+//         var original_topic = "";
+//         var selected_topic = "";
+//     }
+
+//     $.ajax({
+//         url: public_folder + "/get-article-topics",
+//         type: "POST",
+//         async: true,
+//         data: {
+//             selected_topic: selected_topic,
+//             original_topic: original_topic,
+//             mode: mode,
+//             get_article_topics_submit: true,
+//         },
+//         success: function (responses) {
+//             $("#article-topic").html(responses);
+//             console.log(responses);
+//         },
+//     });
+// }
 
 function categoryAdd() {
     var new_category = $("#article-category-add-input").val();
@@ -826,87 +871,111 @@ function categoryAdd() {
         success: function (responses) {
             console.log(responses);
             $("#article-category-add-input").val("");
-            $("#article-originally-selected-category").val("");
-            getArticleCategories();
+            getArticleCategoriesSettings();
         },
     });
 }
 
-function topicAdd() {
-    var new_topic = $("#article-topic-add-input").val();
+function tagAdd() {
+    var new_tag = $("#article-tag-add-input").val();
     $.ajax({
-        url: public_folder + "/add-topic",
+        url: public_folder + "/add-tag",
         type: "POST",
         async: true,
         data: {
-            new_topic: new_topic,
-            add_topic_submit: true,
+            new_tag: new_tag,
+            add_tag_submit: true,
         },
         success: function (responses) {
-            console.log(responses);
-            $("#article-topic-add-input").val("");
-            $("#article-originally-selected-topic").val("");
-            getArticleTopics();
+            $("#article-tag-add-input").val("");
+            getArticleTagsSettings();
         },
     });
 }
 
-function categoryDelete() {
-    // var article_mode = $("#article-mode").val();
+// function topicAdd() {
+//     var new_topic = $("#article-topic-add-input").val();
+//     $.ajax({
+//         url: public_folder + "/add-topic",
+//         type: "POST",
+//         async: true,
+//         data: {
+//             new_topic: new_topic,
+//             add_topic_submit: true,
+//         },
+//         success: function (responses) {
+//             console.log(responses);
+//             $("#article-topic-add-input").val("");
+//             $("#article-originally-selected-topic").val("");
+//             getArticleTopics();
+//         },
+//     });
+// }
 
-    var delete_category = $("#article-category option:selected").text();
-    var original_category = $("#article-original-category").val();
-
+function categoryDelete(category) {
     $.ajax({
         url: public_folder + "/delete-category",
         type: "POST",
         async: true,
         data: {
-            delete_category: delete_category,
+            delete_category: category,
             delete_category_submit: true,
         },
         success: function (responses) {
-            $("#article-category option:selected").val(original_category);
-            initializeArticleCategory();
-            getArticleCategories();
+            getArticleCategoriesSettings();
         },
     });
 }
 
-function topicDelete() {
-    var delete_topic = $("#article-topic option:selected").text();
-    var original_topic = $("#article-original-topic").val();
-
+function tagDelete(tag) {
     $.ajax({
-        url: public_folder + "/delete-topic",
+        url: public_folder + "/delete-tag",
         type: "POST",
         async: true,
         data: {
-            delete_topic: delete_topic,
-            delete_topic_submit: true,
+            delete_tag: tag,
+            delete_tag_submit: true,
         },
         success: function (responses) {
-            $("#article-topic option:selected").val(original_topic);
-            getArticleTopics();
+            getArticleTagsSettings();
         },
     });
 }
 
-function closeAddCategory() {
-    $(".article-category-add").hide();
-    $(".article-category-update").show();
-    $("#article-category-delete-submit-button").hide();
+// function topicDelete() {
+//     var delete_topic = $("#article-topic option:selected").text();
+//     var original_topic = $("#article-original-topic").val();
 
-    getArticleCategories();
-}
+//     $.ajax({
+//         url: public_folder + "/delete-topic",
+//         type: "POST",
+//         async: true,
+//         data: {
+//             delete_topic: delete_topic,
+//             delete_topic_submit: true,
+//         },
+//         success: function (responses) {
+//             $("#article-topic option:selected").val(original_topic);
+//             getArticleTopics();
+//         },
+//     });
+// }
 
-function closeAddTopic() {
-    $(".article-topic-add").hide();
-    $(".article-topic-update").show();
-    var original_topic = $("#article-original-topic").val();
-    $("#article-topic option:selected").text(original_topic);
-    getArticleTopics();
-}
+// function closeAddCategory() {
+//     $(".article-category-add").hide();
+//     $(".article-category-update").show();
+//     $("#article-category-delete-submit-button").hide();
+
+//     getArticleCategories();
+// }
+
+// function closeAddTopic() {
+//     $(".article-topic-add").hide();
+//     $(".article-topic-update").show();
+//     var original_topic = $("#article-original-topic").val();
+//     $("#article-topic option:selected").text(original_topic);
+//     getArticleTopics();
+// }
 
 function getArticleVersions() {
     var article_id = $("#article-id").val();
@@ -920,7 +989,7 @@ function getArticleVersions() {
             get_article_versions_submit: true,
         },
         success: function (responses) {
-            $("#article-version").html(responses);
+            $("#article-versions-list").html(responses);
         },
     });
 }
@@ -961,8 +1030,8 @@ function saveArticle(storage_type) {
     var article_id = $("#article-id").val();
     var article_title = $("#article-title").val();
     var article_category = $("#article-category").val();
-    var article_topic = $("#article-topic").val();
-    var article_version = $("#article-version option:selected").val();
+    var article_tags = $("#article-tags-selected").val();
+    var article_version = $("#article-original-version").val();
     var article_body = $("#editor").html();
 
     $.ajax({
@@ -975,7 +1044,7 @@ function saveArticle(storage_type) {
             article_id: article_id,
             article_title: article_title,
             article_category: article_category,
-            article_topic: article_topic,
+            article_tags: article_tags,
             article_version: article_version,
             article_body: article_body,
             save_article_submit: true,
@@ -1428,7 +1497,17 @@ function toggleMenuContentMobile() {
 }
 
 function showSettingsModal() {
+    getArticleCategoriesSettings();
+    getArticleTagsSettings();
     $("#modal-settings").show();
+}
+
+function toggleArticleMeta() {
+    $("#article-meta-container").toggle();
+}
+
+function toggleArticleVersions() {
+    $("#article-versions-container").toggle();
 }
 function initializeSummernote() {
     $("#summernote").summernote();

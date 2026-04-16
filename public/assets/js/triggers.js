@@ -22,8 +22,8 @@ $(document).ready(function () {
         getUsers();
     }
 
-    $("#profile-submit-button").click(function () {
-        saveProfile();
+    $("#update-profile-submit-button").click(function () {
+        updateProfile();
     });
 
     $(".login-button").click(function () {
@@ -124,8 +124,9 @@ $(document).ready(function () {
         initializeArticlePanel();
     });
 
-    $(document).on("input", "#article-version", function () {
-        getVersionBody();
+    $(document).on("click", "#article-versions-list span", function () {
+        let selected_version = $(this).text();
+        getVersionBody(selected_version);
     });
 
     $("#article-image-button").click(function () {
@@ -141,42 +142,54 @@ $(document).ready(function () {
         showUploadFeaturedImageModal();
     });
 
-    initializeArticleCategory();
-
-    $(document).on("input", "#article-category", function () {
-        initializeArticleCategory();
-    });
-
-    $(document).on("input", "#article-topic", function () {
-        initializeArticleTopics();
-    });
-
     $(document).on("click", "#article-category-add-submit-button", function () {
         categoryAdd();
     });
 
-    $(document).on("click", "#article-topic-add-submit-button", function () {
-        topicAdd();
+    $("#article-category-add-input").keydown(function (event) {
+        if (event.keyCode === 13) {
+            categoryAdd();
+        }
+    });
+
+    $(document).on("click", "#article-tag-add-submit-button", function () {
+        tagAdd();
+    });
+
+    $("#article-tag-add-input").keydown(function (event) {
+        if (event.keyCode === 13) {
+            tagAdd();
+        }
     });
 
     $(document).on(
         "click",
-        "#article-category-delete-submit-button",
+        "#article-categories-list-settings span",
         function () {
-            categoryDelete();
+            let category = $(this).text();
+            categoryDelete(category);
         },
     );
 
-    $(document).on("click", "#article-topic-delete-submit-button", function () {
-        topicDelete();
+    $(document).on("click", "#article-tags-list-settings span", function () {
+        let tag = $(this).text();
+        tagDelete(tag);
     });
 
-    $(document).on("click", "#article-category-add-close", function () {
-        closeAddCategory();
+    //add the clicked tag to the used tags
+    $(document).on("click", "#article-tags-list .not-selected", function () {
+        var newValue = $(this).text();
+        $(this).removeClass("not-selected");
+        $(this).addClass("selected");
+        pushTag(newValue);
     });
 
-    $(document).on("click", "#article-topic-add-close", function () {
-        closeAddTopic();
+    //remove the clicked tag from the used tags
+    $(document).on("click", "#article-tags-list .selected", function () {
+        var newValue = $(this).text();
+        $(this).removeClass("selected");
+        $(this).addClass("not-selected");
+        removeTag(newValue);
     });
 
     $("#article-delete-button").click(function () {
@@ -202,7 +215,6 @@ $(document).ready(function () {
     );
 
     $("#article-save-button").click(function () {
-        alert("save");
         var storage_type = "db";
         saveArticle(storage_type);
     });
@@ -309,6 +321,14 @@ $(document).ready(function () {
 
     $("#settings").click(function () {
         showSettingsModal();
+    });
+
+    $("#article-meta").click(function () {
+        toggleArticleMeta();
+    });
+
+    $("#article-versions").click(function () {
+        toggleArticleVersions();
     });
 
     initializeSummernote();
