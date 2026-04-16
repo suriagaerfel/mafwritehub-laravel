@@ -32,11 +32,6 @@
         width: 100% !important;
     }
 
-    #article-meta-container,
-    #article-versions-container {
-        display: none;
-    }
-
     .settings-container {
         width: 95% !important;
     }
@@ -57,8 +52,12 @@
         display: none;
     }
 
-    #category-topic-verison-container {
+    #category-topic-version-container {
         flex-direction: column !important;
+    }
+
+    #table-of-contents-container {
+        display: none;
     }
 }
 
@@ -70,10 +69,6 @@
 
     #menu {
         display: none;
-    }
-
-    .mobile-based {
-        display: none !important;
     }
 }
 
@@ -94,6 +89,19 @@
 
     .home-content-section div {
         width: 100% !important;
+    }
+
+    #table-of-contents-container {
+        display: none !important;
+    }
+
+    #live-article-container {
+        width: 100% !important;
+        padding: 30px 20px !important;
+    }
+
+    #live-article-details-container {
+        flex-direction: column;
     }
 }
 

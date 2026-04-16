@@ -250,10 +250,10 @@ img {
     width: 100%;
 }
 
-i {
+/* i {
     font-size: 15pt;
     color: #000000;
-}
+} */
 hr {
     border-color: var(--primary-base);
 }
@@ -824,7 +824,7 @@ hr {
     display: none;
 }
 .panel-heading {
-    display: flex;
+    display: inline-block;
     justify-content: center;
     background-color: var(--white) !important;
     border: none;
@@ -896,4 +896,8 @@ hr {
     min-height: 500px;
     box-shadow: var(--back-shadow);
     padding: 15px;
+}
+#article-meta-container,
+#article-versions-container {
+    display: none;
 }

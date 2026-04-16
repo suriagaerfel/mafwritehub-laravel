@@ -1,1 +1,4 @@
-<div id="editor" contenteditable="true"></div>
+<div id="summernote"></div>
+<script>
+    $('#summernote').summernote();
+</script>

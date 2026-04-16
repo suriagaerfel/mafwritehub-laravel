@@ -22,37 +22,35 @@
                 <?php if ($articleStatus == 'Published'){?>
             
                 <div style="width:25%; padding:50px; background-color:white; display:flex;
-                flex-direction:column; justify-content:start;">
-                    <div style="min-height: 300px;">
-                
+                flex-direction:column; justify-content:start;" id="table-of-contents-container">
+                 
                         <strong style="position:sticky;top:0;">Table of Contents</strong>
-                    </div>
-                
+                 
                         @include('components/native-ad')
                     
 
                 </div>
 
-                <div class="live-article-container" style="padding:50px 50px 20px 50px;width:75%;">
+                <div id="live-article-container" style="padding:50px 50px 20px 50px;width:75%;">
                     <h1 id="live-article-title"><?php echo $articleTitle?></h1>
                     <div id="live-article-details-container"  style="display:flex; gap:10px;">
-                            <div>
+                            
                                 <a href="<?php echo $publicFolder.'/articles/writers/'.$articleWriterUsername?>">
                                     <img src="<?php echo $articleWriterProfilePicture?>"class="icon" style="border-radius:50%;">
                                     <span><?php echo $articleWriterName;?></span>
                                 </a>
                                 
-                            </div>
-                            <div>
+                            
+                            
                                 <a href="<?php echo $publicFolder.'/articles/categories/'.$articleCategory;?>">
                                     <em><?php echo $articleCategory;?></em>
                                 </a>
-                            </div>
-                            <div>
+                          
+                           
                                 <a href="<?php echo $publicFolder.'/articles/dates/'.date('Y-m', strtotime($articlePubDate));?>">  
                                     <?php echo dcomplete_format($articlePubDate);?>
                                 </a>
-                            </div>
+                            
 
                             <?php if ($articleUpdateDate > $articlePubDate) {?>
                                 <div>

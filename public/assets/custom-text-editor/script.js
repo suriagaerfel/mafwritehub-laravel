@@ -416,3 +416,30 @@ function showArticleMetaModal() {
 function closeArticleMetaModal() {
     $("#modal-article-meta").hide();
 }
+
+const editor = document.getElementById("editor");
+
+editor.addEventListener("paste", (e) => {
+    e.preventDefault();
+
+    const text = e.clipboardData.getData("text/plain");
+
+    // Split by line breaks
+    const lines = text.split(/\r?\n/);
+
+    const fragment = document.createDocumentFragment();
+
+    lines.forEach((line) => {
+        const p = document.createElement("p");
+        p.style.fontSize = "16px"; // default font size
+        p.textContent = line || "\u00A0"; // preserve empty lines
+        fragment.appendChild(p);
+    });
+
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(fragment);
+});

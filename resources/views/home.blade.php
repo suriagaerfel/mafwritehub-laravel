@@ -61,24 +61,22 @@
                 <div class="list-buttons-container" style="display: flex; gap:10px;">
                     <a class="link-tag-button" href="<?php echo $publicFolder.'/articles/read/'.$articleListSlug;?>">Read</a>
                     <small><?php echo $articleListWriter;?></small>
-                    <small><?php echo $articleListCategory;?></small>
-                    <small><?php echo $articleListTags;?></small>
                     <small><?php echo $articleListPubDate;?></small>
                 </div>
 
                 <?php } } ?>
             </div>
             <div style="width: 50%;padding:30px;">
-                <p>Other articles</p>
+               
             </div>
 
         </div>
         <div style="display: flex; flex-direction:row;" class="home-content-section">
             <div style="width: 50%; padding:30px;" >
-                <p>Maf Write Hub at Glance</p>
+                
             </div>
             <div style="width: 50%;padding:30px;">
-                <p>Other articles</p>
+                
             </div>
 
         </div>

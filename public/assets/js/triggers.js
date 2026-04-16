@@ -206,7 +206,7 @@ $(document).ready(function () {
         updateArticleStatus(action);
     });
 
-    $("#editor,#article-title,#article-category,#article-topic").on(
+    $("#summernote,#article-title,#article-category,#article-tags-selected").on(
         "input",
         function () {
             var storage_type = "session";
@@ -330,6 +330,4 @@ $(document).ready(function () {
     $("#article-versions").click(function () {
         toggleArticleVersions();
     });
-
-    initializeSummernote();
 });

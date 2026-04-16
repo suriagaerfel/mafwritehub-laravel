@@ -11,7 +11,7 @@ if ($pageArticle) {
     $articleId = $pageArticle ['id'];
     $articleVersion = $pageArticle ['version'];
 
-    $stmt= $conn->prepare("SELECT * FROM article_content_versions WHERE article_id=$articleId AND content_version=$articleVersion LIMIT 1");
+    $stmt= $conn->prepare("SELECT * FROM article_versions WHERE article_id=$articleId AND version=$articleVersion LIMIT 1");
     $stmt->execute();
    
     $version = $stmt->fetch();
