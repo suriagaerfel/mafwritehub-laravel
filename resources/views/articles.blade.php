@@ -21,41 +21,40 @@
 
                 <?php if ($articleStatus == 'Published'){?>
             
+               
                 <div style="width:25%; padding:50px; background-color:white; display:flex;
                 flex-direction:column; justify-content:start;" id="table-of-contents-container">
                  
-                        <strong style="position:sticky;top:0;">Table of Contents</strong>
-                 
-                        @include('components/native-ad')
-                    
-
+                        @include('components/table-of-contents')
                 </div>
 
+
                 <div id="live-article-container" style="padding:50px 50px 20px 50px;width:75%;">
+                     <span class="link-tag-button" id="table-of-contents-button" style="display: none;">Table of Contents</span>
                     <h1 id="live-article-title"><?php echo $articleTitle?></h1>
-                    <div id="live-article-details-container"  style="display:flex; gap:10px;">
-                            
-                                <a href="<?php echo $publicFolder.'/articles/writers/'.$articleWriterUsername?>">
-                                    <img src="<?php echo $articleWriterProfilePicture?>"class="icon" style="border-radius:50%;">
-                                    <span><?php echo $articleWriterName;?></span>
-                                </a>
+                    <div id="live-article-details-container">
+                        
+                                <span>
+                                    <a href="<?php echo $publicFolder.'/articles/writers/'.$articleWriterUsername?>">
+                                        <img src="<?php echo $articleWriterProfilePicture?>"class="icon" style="border-radius:50%;">
+                                    <?php echo $articleWriterName;?>
+                                    </a>
+                            </span>
                                 
                             
                             
-                                <a href="<?php echo $publicFolder.'/articles/categories/'.$articleCategory;?>">
-                                    <em><?php echo $articleCategory;?></em>
-                                </a>
+                                <span><a href="<?php echo $publicFolder.'/articles/categories/'.$articleCategory;?>">
+                                    <?php echo $articleCategory;?>
+                                </a></span>
                           
                            
-                                <a href="<?php echo $publicFolder.'/articles/dates/'.date('Y-m', strtotime($articlePubDate));?>">  
+                                <span><a href="<?php echo $publicFolder.'/articles/dates/'.date('Y-m', strtotime($articlePubDate));?>">  
                                     <?php echo dcomplete_format($articlePubDate);?>
-                                </a>
+                                </a></span>
                             
 
                             <?php if ($articleUpdateDate > $articlePubDate) {?>
-                                <div>
                                     <span>(Updated <?php echo dcomplete_format($articleUpdateDate);?>)</span>
-                                </div>
                             <?php } ?>
                         
                             @include('components/share-with')
@@ -70,7 +69,7 @@
 
                     <br>
 
-                    <div id="article-content">
+                    <div id="article-content" style="margin-top: 10px;">
                         <?php echo $articleBody?>
                     </div>
 

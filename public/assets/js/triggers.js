@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    $("#summernote").summernote();
+
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -206,13 +208,12 @@ $(document).ready(function () {
         updateArticleStatus(action);
     });
 
-    $("#summernote,#article-title,#article-category,#article-tags-selected").on(
-        "input",
-        function () {
-            var storage_type = "session";
-            saveArticle(storage_type);
-        },
-    );
+    $(
+        ".note-editable,#article-title,#article-category,#article-tags-selected",
+    ).on("input", function () {
+        var storage_type = "session";
+        saveArticle(storage_type);
+    });
 
     $("#article-save-button").click(function () {
         var storage_type = "db";
@@ -329,5 +330,9 @@ $(document).ready(function () {
 
     $("#article-versions").click(function () {
         toggleArticleVersions();
+    });
+
+    $("#table-of-contents-button").click(function () {
+        toggleTableOfContents();
     });
 });

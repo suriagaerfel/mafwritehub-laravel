@@ -467,7 +467,7 @@ function initializeArticlePanel() {
 
                 $("#article-version").prop("disabled", false);
 
-                $("#summernote").html(responses["article-body"]);
+                $(".note-editable").html(responses["article-body"]);
 
                 $("#article-actions-container").show();
 
@@ -477,7 +477,7 @@ function initializeArticlePanel() {
                     $("#article-unpublish-button").hide();
                     $("#article-delete-button").show();
                     $("#article-image-button").show();
-                    $("#summernote").show();
+                    $(".note-editable").show();
                 }
 
                 if (responses["article-status"] == "Published") {
@@ -486,7 +486,7 @@ function initializeArticlePanel() {
                     $("#article-unpublish-button").show();
                     $("#article-delete-button").hide();
                     $("#article-image-button").hide();
-                    $("#summernote").hide();
+                    $(".note-editable").hide();
                 }
 
                 $("#article-view-button").show();
@@ -501,7 +501,7 @@ function initializeArticlePanel() {
     }
 
     if (article_mode == "new") {
-        $("#summernote").show();
+        $(".note-editable").show();
 
         $("#article-delete-button").hide();
         $("#article-publish-button").hide();
@@ -521,7 +521,7 @@ function initializeArticlePanel() {
         $("#article-image-button").hide();
         $("#article-view-button").hide();
 
-        $("#summernote").html("");
+        $(".note-editable").html("");
 
         $("#article-actions-container").show();
 
@@ -546,7 +546,7 @@ function getVersionBody(selected_version) {
             get_version_body_submit: true,
         },
         success: function (responses) {
-            $("#summernote").html(responses);
+            $(".note-editable").html(responses);
         },
     });
 }
@@ -1032,7 +1032,7 @@ function saveArticle(storage_type) {
     var article_category = $("#article-category").val();
     var article_tags = $("#article-tags-selected").val();
     var article_version = $("#article-original-version").val();
-    var article_body = $("#summernote").html();
+    var article_body = $(".note-editable").html();
 
     $.ajax({
         url: public_folder + "/save-article",
@@ -1510,35 +1510,6 @@ function toggleArticleVersions() {
     $("#article-versions-container").toggle();
 }
 
-document.getElementById("summernote").addEventListener("click", function (e) {
-    const link = e.target.closest("a");
-    if (!link) return;
-
-    e.preventDefault();
-    const text = link.textContent;
-    const url = link.href;
-
-    const modalHtml = `
-    <div class="modal-row">
-      <label>Link text</label>
-      <input type="text" id="linkText" class="modal-input" value="${text}">
-    </div>
-    <div class="modal-row">
-      <label>URL</label>
-      <input type="text" id="linkUrl" class="modal-input" value="${url}" placeholder="https://">
-    </div>
-  `;
-
-    showModal("Edit Link", modalHtml, () => {
-        const txt = document.getElementById("linkText").value.trim();
-        const u = document.getElementById("linkUrl").value.trim();
-
-        if (!u || !u.startsWith("http")) {
-            alert("Please enter a valid URL.");
-            return;
-        }
-
-        link.textContent = txt || u;
-        link.href = u;
-    });
-});
+function toggleTableOfContents() {
+    $("#modal-table-of-contents").toggle();
+}

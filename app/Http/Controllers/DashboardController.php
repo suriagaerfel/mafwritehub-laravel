@@ -216,6 +216,8 @@ public function get_article (Request $request){
            
             if ($versionRecords) {
                     $articleBody= $versionRecords ['version_body'];
+            } else {
+                $articleBody= '';
             }
            
             $articleStatus = $article ['status'];

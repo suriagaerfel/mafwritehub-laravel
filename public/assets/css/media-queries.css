@@ -100,8 +100,13 @@
         padding: 30px 20px !important;
     }
 
-    #live-article-details-container {
-        flex-direction: column;
+    #table-of-contents-button {
+        display: block !important;
+    }
+
+    #modal-table-of-contents .website-modal-content {
+        width: 95% !important;
+        height: fit-content !important;
     }
 }
 

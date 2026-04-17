@@ -462,6 +462,32 @@
 
 
 
+    <?php //-----------------FOR TABLE OF CONTENTS----------------------------- ?>
+
+    <div class="modal website-modal website-modal-wrapper" id="modal-table-of-contents">
+        <div class="website-modal-content">
+            <div class="close-modal-container" style="display:flex; justify-content:right;">
+                <span class="close close-without-null-redirection"><i class="bi bi-x"></i></span>
+            </div>
+
+            @include('components/table-of-contents')
+           
+
+            
+            
+                
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
 
 
 
