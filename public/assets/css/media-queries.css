@@ -108,6 +108,11 @@
         width: 95% !important;
         height: fit-content !important;
     }
+
+    #article-content p iframe {
+        width: 100% !important;
+        height: auto !important;
+    }
 }
 
 /*Between tablet and desktop modes...*/

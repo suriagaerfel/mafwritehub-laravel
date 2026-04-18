@@ -5,7 +5,7 @@
     <img src="<?php echo $publicFolder.'/assets/images/facebook.png'?>" class="icon" id="fbShare">
     <img src="<?php echo $publicFolder.'/assets/images/twitter.png'?>" class="icon" id="twitterShare">
     <img src="<?php echo $publicFolder.'/assets/images/linkedin.png'?>" class="icon" id="linkedinShare">
-</span>
+  </span>
 
 
 
